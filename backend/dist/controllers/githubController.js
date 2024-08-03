@@ -85,7 +85,7 @@ export const handleGetAppRepositoryInformation = (req, res) => __awaiter(void 0,
 export const handleGetUserRepositories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const octokit = new Octokit({
-            auth: req.body.userToken
+            auth: req.body.accessJwt
         });
         const response = yield octokit.request('GET /user/repos', {
             headers: {

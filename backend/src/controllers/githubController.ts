@@ -90,10 +90,10 @@ export const handleGetAppRepositoryInformation = async (req: Request, res: Respo
   }
 }
 
-export const handleGetUserRepositories = async (req: Request<{ userToken: string }>, res: Response) => {
+export const handleGetUserRepositories = async (req: Request<{ accessJwt: string, refreshJwt: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
-      auth: req.body.userToken
+      auth: req.body.accessJwt
     })
 
     const response = await octokit.request('GET /user/repos', {

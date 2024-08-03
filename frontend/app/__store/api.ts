@@ -2,7 +2,8 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query";
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosError } from "axios";
-import { TLoginInfo } from "../__typings/api";
+import { TLoginInfo, TUserRepository } from "../__typings/api";
+
 
 const axiosBaseQuery =
   (
@@ -25,7 +26,9 @@ const axiosBaseQuery =
         method,
         data,
         params,
-        headers,
+        headers: {
+          ...headers,
+        },
       });
       return { data: result.data };
     } catch (axiosError) {
@@ -75,7 +78,13 @@ const AppApi = createApi({
         data: requestBody,
       }),
     }),
-    
+    getUserRepositories: builder.query<TUserRepository, {accessJwt: string, refreshJwt: string}>({
+      query: (requestBody) => ({
+        url: "/github/user/repos",
+        method: "GET",
+        data: requestBody,
+      }),
+    }),
   }),
 });
 
