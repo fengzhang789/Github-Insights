@@ -65,7 +65,7 @@ export default function Home() {
         </FeatureCard>
         <FeatureCard>
           <h3>Visual Commit History</h3>
-          <p>See your project's evolution with intuitive visualizations.</p>
+          <p>See your project&apos;s evolution with intuitive visualizations.</p>
         </FeatureCard>
         <FeatureCard>
           <h3>Team Collaboration</h3>
@@ -104,11 +104,11 @@ export default function Home() {
       <h2>What Our Users Say</h2>
       <TestimonialGrid>
         <Testimonial>
-          <Quote>"GitInsights revolutionized how we understand our codebase."</Quote>
+          <Quote>&apos;GitInsights revolutionized how we understand our codebase.&apos;</Quote>
           <Author>Jane Doe, Senior Developer at TechCorp</Author>
         </Testimonial>
         <Testimonial>
-          <Quote>"The AI-powered summaries save us hours of code review time."</Quote>
+          <Quote>&apos;The AI-powered summaries save us hours of code review time.&apos;</Quote>
           <Author>John Smith, CTO at StartupX</Author>
         </Testimonial>
       </TestimonialGrid>
