@@ -18,8 +18,11 @@ const TopBar = () => {
 
 
       {currentView == null &&
-        <button className='"bg-black text-white border border-white py-2 px-4 ml-2 transition duration-300 hover:bg-gray-800 hover:text-gray-400 active:bg-gray-600 active:text-gray-500 active:border-gray-700"'>
-            Upload Project
+        <button className='"bg-black rounded-xl
+         text-white border border-white
+         py-2 px-4 ml-2 transition duration-300 
+         hover:bg-gray-800 hover:text-gray-400 active:bg-gray-600 active:text-gray-500 active:border-gray-700"'>
+            Choose Project
         </button>
       }
       { currentView != null &&

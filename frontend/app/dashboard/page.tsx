@@ -12,6 +12,13 @@ export default function Dashboard() {
   return (
     <div>
       <TopBar/>
+      {currentView == null && 
+        <div className="h-[80svh] grid place-items-center">
+        <h1 className="text-5xl font-semibold text-center">
+          Select a Repository to Start.
+        </h1>
+        </div>
+      }
       {currentView == 'project' &&
       'project'}
       {currentView == 'feature' &&
