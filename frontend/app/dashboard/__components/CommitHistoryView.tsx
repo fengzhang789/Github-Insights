@@ -8,7 +8,7 @@ const CommitHistoryView = (repo: any) => {
       <div className="flex-1 basis-1/4">
         <CommitHistoryScrollbar repo={repo} />
       </div>
-      <div className="flex-1 basis-3/4">
+      <div className="flex-1 basis-3/4 px-10 py-6">
         <CommitHistoryContent repo={repo} />
       </div>
     </div>
