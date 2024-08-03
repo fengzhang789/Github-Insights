@@ -9,9 +9,16 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState, Suspense } from "react";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
+
+
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from "../../__store/store";
+import { setRepoList } from "../../__store/repoSlice"
+
 type Props = {};
 
 const PageContent = (props: Props) => {
+  const dispatch = useDispatch()
   const router = useRouter();
 
   const [cookies, setCookie, removeCookie] = useCookies(["accessJwt"]);
@@ -21,9 +28,9 @@ const PageContent = (props: Props) => {
   const [repositories, setRepositories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const extractRepositoryNames = (repos) => {
+  const extractRepositoryNames = (repos : any) => {
     console.log("repo: ", repos);
-    return repos.map((repo) => repo.name);
+    return repos.map((repo : any) => repo.name);
   };
 
   useEffect(() => {
@@ -49,6 +56,7 @@ const PageContent = (props: Props) => {
           .then((response) => {
             setRepositories(response.data);
             console.log("user repositories set: ", repositories);
+            dispatch(setRepoList(response.data))
           })
           .catch((error) => {
             console.error("Error fetching repositories:", error);
@@ -71,7 +79,7 @@ const PageContent = (props: Props) => {
         <p>Loading repositories...</p>
       ) : (
         <ul>
-          {extractRepositoryNames(repositories).map((repo, index) => (
+          {extractRepositoryNames(repositories).map((repo : any, index : number) => (
             <li key={index}>
               <button className="repo-button">{repo}</button>
             </li>
