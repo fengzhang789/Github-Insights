@@ -8,4 +8,4 @@ router.get('/app/repositories/all', handleGetAppRepositoryInformation);
 router.get('/installations/all', handleGetAppInstallations);
 router.post('/user/repositories', handleGetUserRepositories);
 router.post('/login', handleLoginGithub);
-router.get('/repository/commits', handleGetRepositoryCommits);
+router.post('/repository/commits', handleGetRepositoryCommits);
