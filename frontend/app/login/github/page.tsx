@@ -39,9 +39,9 @@ const Page = (props: Props) => {
           console.error('Error fetching repositories:', error);
         });
       } else {
-        console.log("not result.isSuccess && result.data.access_token && result.data.refresh_token")
+        console.log("not result.isSuccess && result.data.access_token")
         console.log("result.isSuccess: ", result.isSuccess)
-        console.log("result.data: ",  result.data)
+        console.log("result.data: ",  result.data?.access_token)
         
       }
     }

@@ -90,5 +90,6 @@ const AppApi = createApi({
 
 export const {
   useLoginMutation,
+  useGetUserRepositoriesQuery
 } = AppApi;
 export default AppApi;
