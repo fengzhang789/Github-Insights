@@ -1,17 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import ScrollbarCard from "./ScrollbarCard";
-import { CommitHistoryViewProps } from "@/app/__typings/localtypes";
+import { CommitHistoryScrollbarProps } from "@/app/__typings/localtypes";
 
 export default function CommitHistoryScrollBar({
   commitHistory,
-}: CommitHistoryViewProps) {
+  setCommitSHA,
+}: CommitHistoryScrollbarProps) {
   return (
     <ScrollContainer>
       {commitHistory && commitHistory.length > 0 ? (
         commitHistory.map((commit, index) => (
           <CardWrapper key={index}>
-            <ScrollbarCard commit={commit} />
+            <ScrollbarCard commit={commit} setCommitSHA={setCommitSHA} />
           </CardWrapper>
         ))
       ) : (

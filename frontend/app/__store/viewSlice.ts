@@ -1,17 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type ViewState = null | 'project' | 'feature' | 'user';
+type ViewState = null | "project" | "feature" | "user";
 
 interface ViewSliceState {
   currentView: ViewState;
 }
 
 const initialState: ViewSliceState = {
-  currentView: 'user',
+  currentView: null,
 };
 
 const viewSlice = createSlice({
-  name: 'view',
+  name: "view",
   initialState,
   reducers: {
     setView: (state, action: PayloadAction<ViewState>) => {
