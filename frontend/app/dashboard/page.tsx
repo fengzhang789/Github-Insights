@@ -1,11 +1,13 @@
 "use client";
 import * as React from "react"
  
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CommitHistoryView from './__components/CommitHistoryView';
 import TopBar from "../__components/Topbar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../__store/store";
+
+import { TUserRepository } from "../__typings/api";
 
 import {
   Select,
@@ -21,6 +23,11 @@ export default function Dashboard() {
   const currentView = useSelector((state: RootState) => state.view.currentView);
   const repos = useSelector((state: RootState) => state.repo.RepoList);
 
+  const [selectedRepo, setSelectedRepo] = useState(null);
+
+  const handleSelect = (e : any) => {
+    setSelectedRepo(e.target.value)
+  }
   useEffect(()=>{
     console.log(repos)
   }, [])
@@ -39,18 +46,10 @@ export default function Dashboard() {
       </SelectTrigger>
       <SelectContent>
         {repos.map((repo : any, index : number) => (
-              <SelectItem key={index} value=''>
+              <SelectItem key={index} value={repo}>
                 {repo.name}
               </SelectItem>
             ))}
-          <SelectItem value="acst">
-            Australian Central Standard Time (ACST)
-          </SelectItem>
-          <SelectItem value="aest">
-            Australian Eastern Standard Time (AEST)
-          </SelectItem>
-          <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
-          <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
       </SelectContent>
     </Select>
         </div>
