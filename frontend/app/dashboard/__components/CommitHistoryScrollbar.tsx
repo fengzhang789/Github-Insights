@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import ScrollbarCard from "./ScrollbarCard";
-import { CommitHistoryViewProps } from "@/app/__typings/localtypes";
+import { CommitHistoryScrollbarProps } from "@/app/__typings/localtypes";
 
 export default function CommitHistoryScrollBar({
   commitHistory,
-}: CommitHistoryViewProps) {
+}: CommitHistoryScrollbarProps) {
   return (
     <ScrollContainer>
       {commitHistory && commitHistory.length > 0 ? (

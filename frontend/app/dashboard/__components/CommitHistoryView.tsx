@@ -5,15 +5,19 @@ import { CommitHistoryViewProps } from "@/app/__typings/localtypes";
 
 const CommitHistoryView: React.FC<CommitHistoryViewProps> = ({
   commitHistory,
+  repo,
+  name
 }) => {
-  //const [comitSHA, setCommitSHA] = useState<string | null>(null);
+  const [commitSHA, setCommitSHA] = useState<string | null>(null);
 
   return (
     <div className="flex">
       <div className="flex-1 basis-1/4">
-        <CommitHistoryScrollbar commitHistory={commitHistory} />
+        <CommitHistoryScrollbar commitHistory={commitHistory}/>
       </div>
-      <div className="flex-1 basis-3/4 px-10 py-6"></div>
+      <div className="flex-1 basis-3/4 px-10 py-6">
+        <CommitHistoryContent SHA={commitSHA} repo={repo} owner={name}/>
+      </div>
     </div>
   );
 };
