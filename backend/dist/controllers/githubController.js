@@ -128,3 +128,36 @@ export const handleGetRepositoryCommits = (req, res) => __awaiter(void 0, void 0
         res.send(error.message);
     }
 });
+export const handleGetRepositoryCommit = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const octokit = new Octokit({
+            auth: req.body.accessJwt
+        });
+        const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        res.send(response.data);
+    }
+    catch (error) {
+        res.send(error.message);
+    }
+});
+export const handleGetRepositoryCommitDiff = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const octokit = new Octokit({
+            auth: req.body.accessJwt
+        });
+        const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+                'accept': 'application/vnd.github.diff'
+            }
+        });
+        res.send(response.data);
+    }
+    catch (error) {
+        res.send(error.message);
+    }
+});

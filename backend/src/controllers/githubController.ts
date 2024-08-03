@@ -144,3 +144,39 @@ export const handleGetRepositoryCommits = async (req: Request<{ owner: string, r
   }
 }
 
+export const handleGetRepositoryCommit = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
+  try {
+    const octokit = new Octokit({
+      auth: req.body.accessJwt
+    })
+
+    const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+
+    res.send(response.data)
+  } catch (error: any) {
+    res.send(error.message)
+  }
+}
+
+export const handleGetRepositoryCommitDiff = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
+  try {
+    const octokit = new Octokit({
+      auth: req.body.accessJwt
+    })
+
+    const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+        'accept': 'application/vnd.github.diff'
+      }
+    })
+
+    res.send(response.data)
+  } catch (error: any) {
+    res.send(error.message)
+  }
+}
