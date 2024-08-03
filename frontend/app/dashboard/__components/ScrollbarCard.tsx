@@ -7,32 +7,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ScrollbarCardProps } from "@/app/__typings/localtypes";
+import styled from "styled-components";
 
-type Commit = {
-  name: string;
-  user: string;
-  time: string;
-  message: string;
-};
-
-type CommitHistoryScrollBarProps = {
-  commit: Commit;
-};
-
-export default function ScrollbarCard({ commit }: CommitHistoryScrollBarProps) {
+export default function ScrollbarCard({ commit }: ScrollbarCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{commit.name}</CardTitle>
-        <CardDescription>{commit.user}</CardDescription>
+        <Avatar src={commit.avatar} alt={`${commit.name}'s avatar`} />
+        <CardTitle>{commit.sha}</CardTitle>
+        <CardDescription>{commit.name}</CardDescription>
+        <CardDescription>{commit.email}</CardDescription>
       </CardHeader>
       <CardContent>
         <p>Commit Message: {commit.message}</p>
       </CardContent>
       <CardFooter>
-        <p>Date Created: {commit.time}</p>{" "}
-        {/* we will need to change this to make it look nicer */}
+        <p>Date Created: {commit.date}</p>{" "}
       </CardFooter>
     </Card>
   );
 }
+
+const Avatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+`;

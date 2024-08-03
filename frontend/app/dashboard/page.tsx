@@ -6,32 +6,70 @@ import CommitHistoryView from "./__components/CommitHistoryView";
 import TopBar from "../__components/Topbar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../__store/store";
-import { setSelectedRepo } from "../__store/repoSlice";
 import { setView } from "../__store/viewSlice";
+import { setSelectedRepo } from "../__store/repoSlice";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 import { TUserRepository } from "../__typings/api";
+import { current } from "@reduxjs/toolkit";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
 
   const currentView = useSelector((state: RootState) => state.view.currentView);
   const repos = useSelector((state: RootState) => state.repo.RepoList);
-
   const [selectedRepository, setSelectedRepository] = useState(null);
+  const [commitHistory, setCommitHistory] = useState(null);
+  const [cookies] = useCookies(["accessJwt"]);
 
   const handleClick = () => {
     console.log(selectedRepository);
     dispatch(setSelectedRepo(selectedRepository));
-    dispatch(setView('project'))
+    dispatch(setView("project"));
+    getRepoInfo();
   };
 
   const handleSelectChange = (event: any) => {
-    const selectedRepo = repos.find(repo => repo.name === event.target.value);
+    const selectedRepo = repos.find((repo) => repo.name === event.target.value);
     setSelectedRepository(selectedRepo);
   };
 
   useEffect(() => {
     console.log(repos);
   }, []);
+  const handleSelect = (e: any) => {
+    setSelectedRepo(e.target.value);
+  };
+
+  const getRepoInfo = () => {
+    console.log("abc123");
+    if (selectedRepository) {
+      // we need to see if the view is project view... this is not READY YET!!!!!!!
+      console.log(selectedRepository["owner"]["login"]);
+      console.log(selectedRepository["name"]);
+      axios
+        .post("http://localhost:5000/github/repository/commits", {
+          owner: selectedRepository["owner"]["login"],
+          repo: selectedRepository["name"],
+          accessJwt: cookies.accessJwt,
+        })
+        .then((response) => {
+          const formattedCommitHistory = response.data.map((commit: any) => ({
+            name: commit.commit.author.name,
+            email: commit.commit.author.email,
+            date: commit.commit.author.date,
+            message: commit.commit.message,
+            sha: commit.sha,
+            avatar: commit.author.avatar_url,
+          }));
+          setCommitHistory(formattedCommitHistory);
+          console.log("commit history:", formattedCommitHistory);
+        })
+        .catch((error) => {
+          console.error("Error fetching commit history:", error);
+        });
+    }
+  };
 
   return (
     <div>
@@ -64,7 +102,9 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-      {currentView == "project" && "project"}
+      {currentView == "project" && (
+        <CommitHistoryView commitHistory={commitHistory} />
+      )}
       {currentView == "feature" && "feature"}
       {currentView == "user" && "user"}
     </div>

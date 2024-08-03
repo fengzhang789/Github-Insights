@@ -1,28 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 import ScrollbarCard from "./ScrollbarCard";
-
-type Commit = {
-  name: string;
-  user: string;
-  time: string;
-  message: string;
-};
-
-type CommitHistoryScrollBarProps = {
-  commits: Commit[];
-};
+import { CommitHistoryViewProps } from "@/app/__typings/localtypes";
 
 export default function CommitHistoryScrollBar({
-  commits,
-}: CommitHistoryScrollBarProps) {
+  commitHistory,
+}: CommitHistoryViewProps) {
   return (
     <ScrollContainer>
-      {commits.map((commit, index) => (
-        <CardWrapper key={index}>
-          <ScrollbarCard commit={commit} />
-        </CardWrapper>
-      ))}
+      {commitHistory && commitHistory.length > 0 ? (
+        commitHistory.map((commit, index) => (
+          <CardWrapper key={index}>
+            <ScrollbarCard commit={commit} />
+          </CardWrapper>
+        ))
+      ) : (
+        <NoCommitsText>No commits</NoCommitsText>
+      )}
     </ScrollContainer>
   );
 }
@@ -38,4 +32,10 @@ const ScrollContainer = styled.div`
 const CardWrapper = styled.div`
   padding: 10px;
   margin-bottom: 10px;
+`;
+
+const NoCommitsText = styled.div`
+  padding: 10px;
+  text-align: center;
+  color: #888;
 `;
