@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ClientLayout from "./clientLayout";
 import ReduxProvider from "./__store/ReduxProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
@@ -18,7 +19,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={inter.className}
+        style={{ backgroundColor: "black", color: "white" }}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
