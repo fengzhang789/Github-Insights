@@ -15,17 +15,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const client_1 = require("@prisma/client");
+const exampleRoute_1 = require("./routes/exampleRoute");
+const octokit_1 = require("octokit");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const PORT = 5000;
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
+const octokit = new octokit_1.Octokit({
+    auth: process.env.GITHUB_TOKEN
+});
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use('/example', exampleRoute_1.router);
 app.get('/', (req, res) => {
     res.send('Hello, world!');
 });
 app.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield prisma.user.findMany();
-    res.json(users);
+    try {
+        const users = yield prisma.user.findMany();
+        res.json(users);
+    }
+    catch (error) {
+        console.error(error);
+    }
 }));
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+app.get('/listCommits', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let owner = 'fengzhang789';
+        let repo = 'hackthe6ix';
+        const response = yield octokit.request('GET /repos/{owner}/{repo}/commits', {
+            owner: owner, // req.owner
+            repo: repo, // req.repo
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        console.log(response);
+        res.send(response.data);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch list of commits' });
+    }
+}));
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

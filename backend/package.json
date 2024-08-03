@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "tsc && node dist/index.js"
   },
+  "type":"module",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -14,7 +15,8 @@
   "dependencies": {
     "@prisma/client": "^5.17.0",
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "octokit": "^4.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
