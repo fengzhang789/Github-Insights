@@ -1,14 +1,19 @@
 "use client";
 
-import { useLoginMutation, useGetUserRepositoriesQuery } from '@/app/__store/api';
-import axios from 'axios';
-import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState, Suspense } from 'react'
-import { useCookies } from 'react-cookie';
-
-type Props = {}
+import {
+  useLoginMutation,
+  useGetUserRepositoriesQuery,
+} from "@/app/__store/api";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState, Suspense } from "react";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
+type Props = {};
 
 const PageContent = (props: Props) => {
+  const router = useRouter();
+
   const [cookies, setCookie, removeCookie] = useCookies(["accessJwt"]);
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
@@ -17,8 +22,8 @@ const PageContent = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const extractRepositoryNames = (repos) => {
-    console.log("repo: ", repos)
-    return repos.map(repo => repo.name);
+    console.log("repo: ", repos);
+    return repos.map((repo) => repo.name);
   };
 
   useEffect(() => {
@@ -35,26 +40,27 @@ const PageContent = (props: Props) => {
 
         //const {repos, isSuccess} = useGetUserRepositoriesQuery(result.data.access_token);
 
-        console.log("cookies set", result.data.access_token)
+        console.log("cookies set", result.data.access_token);
         // get user repositories
-        axios.post('http://localhost:5000/github/user/repositories', {
-          accessJwt: result.data.access_token,
-        })
-          .then(response => {
-            setRepositories(response.data);
-            console.log("user repositories set: ", repositories)
+        axios
+          .post("http://localhost:5000/github/user/repositories", {
+            accessJwt: result.data.access_token,
           })
-          .catch(error => {
-            console.error('Error fetching repositories:', error);
+          .then((response) => {
+            setRepositories(response.data);
+            console.log("user repositories set: ", repositories);
+          })
+          .catch((error) => {
+            console.error("Error fetching repositories:", error);
           })
           .finally(() => {
             setIsLoading(false);
+            router.push("/dashboard");
           });
       } else {
-        console.log("not result.isSuccess && result.data.access_token")
-        console.log("result.isSuccess: ", result.isSuccess)
-        console.log("result.data: ", result.data?.access_token)
-
+        console.log("not result.isSuccess && result.data.access_token");
+        console.log("result.isSuccess: ", result.isSuccess);
+        console.log("result.data: ", result.data?.access_token);
       }
     }
   }, [result, setCookie]); // Only run effect if `result` or `setCookie` changes
@@ -67,23 +73,21 @@ const PageContent = (props: Props) => {
         <ul>
           {extractRepositoryNames(repositories).map((repo, index) => (
             <li key={index}>
-              <button className="repo-button">
-                {repo}
-              </button>
+              <button className="repo-button">{repo}</button>
             </li>
           ))}
         </ul>
       )}
     </div>
-  )
-}
+  );
+};
 
 const Page = (props: Props) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <PageContent {...props} />
     </Suspense>
-  )
-}
+  );
+};
 
 export default Page;

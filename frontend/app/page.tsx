@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styled, {keyframes} from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { NavigationMenuDemo } from "@/app/__components/NavBar";
 import DemoSection from "@/app/__components/DemoSection";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CodeDemo from "@/public/CodeDemo.png";
+import Link from "next/link";
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,11 +31,13 @@ export default function Home() {
     <div>
       <NavBar className={isScrolled ? "scrolled" : ""}>
         <NavigationMenuDemo />
-        <NavBarButton variant={isScrolled ? "outline" : "default"}>
-          <a href="/login">
-            Get Started
-          </a>
-        </NavBarButton>
+        <div style={{ marginLeft: "auto", marginRight: "20px" }}>
+          <Link href="/login">
+            <NavBarButton variant={isScrolled ? "outline" : "default"}>
+              Get Started
+            </NavBarButton>
+          </Link>
+        </div>
       </NavBar>
       <ContentContainer>
         <BoldHeader>
@@ -43,10 +46,9 @@ export default function Home() {
             Your Commits, <GradientHeader>Reimagined.</GradientHeader>
           </span>
         </BoldHeader>
-        <StyledButton> 
-          <a href="/login"> 
-            Get Started with GitInsights &gt;
-          </a></StyledButton>
+        <Link href="/login">
+          <StyledButton>Get Started with GitInsights &gt;</StyledButton>
+        </Link>
       </ContentContainer>
       <StyledImage src={CodeDemo} alt="Example" />
       <LeftAlignedContainer>
@@ -62,98 +64,111 @@ export default function Home() {
         </StyledBox>
       </LeftAlignedContainer>
 
-      <DemoSection/>
+      <DemoSection />
 
       <FeaturesSection>
-      <h2>Key Features</h2>
-      <FeatureGrid>
-        <FeatureCard>
-          <h3>AI-Powered Analysis</h3>
-          <p>Leverage advanced AI to get deep insights into your commit history.</p>
-        </FeatureCard>
-        <FeatureCard>
-          <h3>Visual Commit History</h3>
-          <p>See your project&apos;s evolution with intuitive visualizations.</p>
-        </FeatureCard>
-        <FeatureCard>
-          <h3>Team Collaboration</h3>
-          <p>Understand team dynamics and contributions at a glance.</p>
-        </FeatureCard>
-        <FeatureCard>
-          <h3>Performance Metrics</h3>
-          <p>Track key performance indicators for your development process.</p>
-        </FeatureCard>
-      </FeatureGrid>
-    </FeaturesSection>
+        <h2>Key Features</h2>
+        <FeatureGrid>
+          <FeatureCard>
+            <h3>AI-Powered Analysis</h3>
+            <p>
+              Leverage advanced AI to get deep insights into your commit
+              history.
+            </p>
+          </FeatureCard>
+          <FeatureCard>
+            <h3>Visual Commit History</h3>
+            <p>
+              See your project&apos;s evolution with intuitive visualizations.
+            </p>
+          </FeatureCard>
+          <FeatureCard>
+            <h3>Team Collaboration</h3>
+            <p>Understand team dynamics and contributions at a glance.</p>
+          </FeatureCard>
+          <FeatureCard>
+            <h3>Performance Metrics</h3>
+            <p>
+              Track key performance indicators for your development process.
+            </p>
+          </FeatureCard>
+        </FeatureGrid>
+      </FeaturesSection>
 
-    <HowItWorksSection>
-      <h2>How GitInsights Works</h2>
-      <StepGrid>
-        <Step>
-          <h3>1. Connect Your Repository</h3>
-          <p>Link your GitHub or GitLab repository to GitInsights.</p>
-        </Step>
-        <Step>
-          <h3>2. AI Analysis</h3>
-          <p>Our AI analyzes your commit history and codebase.</p>
-        </Step>
-        <Step>
-          <h3>3. Generate Insights</h3>
-          <p>Receive detailed visualizations and actionable insights.</p>
-        </Step>
-        <Step>
-          <h3>4. Improve Your Workflow</h3>
-          <p>Use the insights to optimize your development process.</p>
-        </Step>
-      </StepGrid>
-    </HowItWorksSection>
+      <HowItWorksSection>
+        <h2>How GitInsights Works</h2>
+        <StepGrid>
+          <Step>
+            <h3>1. Connect Your Repository</h3>
+            <p>Link your GitHub or GitLab repository to GitInsights.</p>
+          </Step>
+          <Step>
+            <h3>2. AI Analysis</h3>
+            <p>Our AI analyzes your commit history and codebase.</p>
+          </Step>
+          <Step>
+            <h3>3. Generate Insights</h3>
+            <p>Receive detailed visualizations and actionable insights.</p>
+          </Step>
+          <Step>
+            <h3>4. Improve Your Workflow</h3>
+            <p>Use the insights to optimize your development process.</p>
+          </Step>
+        </StepGrid>
+      </HowItWorksSection>
 
-    <TestimonialsSection>
-      <h2>What Our Users Say</h2>
-      <TestimonialGrid>
-        <Testimonial>
-          <Quote>&apos;GitInsights revolutionized how we understand our codebase.&apos;</Quote>
-          <Author>Jane Doe, Senior Developer at TechCorp</Author>
-        </Testimonial>
-        <Testimonial>
-          <Quote>&apos;The AI-powered summaries save us hours of code review time.&apos;</Quote>
-          <Author>John Smith, CTO at StartupX</Author>
-        </Testimonial>
-      </TestimonialGrid>
-    </TestimonialsSection>
+      <TestimonialsSection>
+        <h2>What Our Users Say</h2>
+        <TestimonialGrid>
+          <Testimonial>
+            <Quote>
+              &apos;GitInsights revolutionized how we understand our
+              codebase.&apos;
+            </Quote>
+            <Author>Jane Doe, Senior Developer at TechCorp</Author>
+          </Testimonial>
+          <Testimonial>
+            <Quote>
+              &apos;The AI-powered summaries save us hours of code review
+              time.&apos;
+            </Quote>
+            <Author>John Smith, CTO at StartupX</Author>
+          </Testimonial>
+        </TestimonialGrid>
+      </TestimonialsSection>
 
-    <CTASection>
-      <h2>Ready to Reimagine Your Commits?</h2>
-      <p>Join thousands of developers who have transformed their workflow with GitInsights.</p>
-      <StyledButton>Start Your Free Trial</StyledButton>
-    </CTASection>
+      <CTASection>
+        <h2>Ready to Reimagine Your Commits?</h2>
+        <p>
+          Join thousands of developers who have transformed their workflow with
+          GitInsights.
+        </p>
+        <StyledButton>Start Your Free Trial</StyledButton>
+      </CTASection>
 
-    <Footer>
-      <FooterDiv>
-      <FooterSection>
-        <h4>Product</h4>
-        <FooterLink href="/features">Features</FooterLink>
-        <FooterLink href="/docs">Documentation</FooterLink>
-      </FooterSection>
-      <FooterSection>
-        <h4>Company</h4>
-        <FooterLink href="/about">About Us</FooterLink>
-        <FooterLink href="/contact">Contact</FooterLink>
-      </FooterSection>
-      <FooterSection>
-        <h4>Legal</h4>
-        <FooterLink href="/privacy">Privacy Policy</FooterLink>
-        <FooterLink href="/terms">Terms of Service</FooterLink>
-      </FooterSection>
-      </FooterDiv>
-      <FooterBottom>
-        <p>&copy; 2024 GitInsights. All rights reserved.</p>
-        <SocialIcons>
-          {/* Add social media icons/links here */}
-        </SocialIcons>
-      </FooterBottom>
-    </Footer>
-
+      <Footer>
+        <FooterDiv>
+          <FooterSection>
+            <h4>Product</h4>
+            <FooterLink href="/features">Features</FooterLink>
+            <FooterLink href="/docs">Documentation</FooterLink>
+          </FooterSection>
+          <FooterSection>
+            <h4>Company</h4>
+            <FooterLink href="/about">About Us</FooterLink>
+            <FooterLink href="/contact">Contact</FooterLink>
+          </FooterSection>
+          <FooterSection>
+            <h4>Legal</h4>
+            <FooterLink href="/privacy">Privacy Policy</FooterLink>
+            <FooterLink href="/terms">Terms of Service</FooterLink>
+          </FooterSection>
+        </FooterDiv>
+        <FooterBottom>
+          <p>&copy; 2024 GitInsights. All rights reserved.</p>
+          <SocialIcons>{/* Add social media icons/links here */}</SocialIcons>
+        </FooterBottom>
+      </Footer>
     </div>
   );
 }
@@ -212,7 +227,9 @@ const StyledButton = styled(Button)`
   border: none; // Remove default border
   cursor: pointer; // Pointer cursor on hover
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle box shadow
-  transition: background-color 0.3s, transform 0.2s; // Smooth transitions
+  transition:
+    background-color 0.3s,
+    transform 0.2s; // Smooth transitions
 
   &:hover {
     background-color: #6a0dad; // Darker background on hover
@@ -225,14 +242,11 @@ const StyledButton = styled(Button)`
   }
 `;
 
-
 const NavBarButton = styled(Button)`
   padding: 15px 20px; // Increase padding for a larger button
   font-size: 1rem; // Increase font size
   width: auto; // Adjust width if needed
   height: auto; // Adjust height if needed
-  margin-left: auto; // Push the button to the right
-  margin-right: 20px; // Add some padding to the right
 `;
 
 const StyledImage = styled(Image)`
@@ -301,7 +315,9 @@ const FeatureCard = styled.div`
   min-height: 16rem;
   z-index: -1;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
 
   &:hover {
@@ -324,7 +340,6 @@ const FeatureCard = styled.div`
     min-height: auto;
   }
 `;
-
 
 // How It Works Section
 const HowItWorksSection = styled.section`
@@ -357,11 +372,7 @@ const Step = styled.div`
   padding: 20px;
   border-radius: 10px;
   z-index: -1;
-  background: linear-gradient(
-    to top,
-    #000000,
-    #242424
-  );
+  background: linear-gradient(to top, #000000, #242424);
 
   backdrop-filter: blur(5px);
   transition: transform 0.3s ease;
