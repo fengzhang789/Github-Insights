@@ -1,14 +1,15 @@
 import React from 'react'
-import { useAuth0 } from "@auth0/auth0-react";
 
 type Props = {}
 
 const Page = (props: Props) => {
-  const { loginWithRedirect } = useAuth0();
+  const url = new URL("https://github.com/login/oauth/authorize");
+  url.searchParams.append("client_id", process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID ?? "");
+  url.searchParams.append("redirect_uri", "http://localhost:3000/login/github");
 
   return (
     <>
-      <button onClick={() => loginWithRedirect()}>CLICK ME TO LOGIN</button>
+      <a href={url.toString()}>Sign up with GitHub</a>
     </>
   )
 }
