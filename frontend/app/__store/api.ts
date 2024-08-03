@@ -78,7 +78,7 @@ const AppApi = createApi({
         data: requestBody,
       }),
     }),
-    getUserRepositories: builder.query<TUserRepository, {accessJwt: string, refreshJwt: string}>({
+    getUserRepositories: builder.query<TUserRepository, {accessJwt: string}>({
       query: (requestBody) => ({
         url: "/github/user/repos",
         method: "GET",
