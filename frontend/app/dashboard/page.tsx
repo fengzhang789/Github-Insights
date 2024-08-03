@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import CommitHistoryView from './__components/CommitHistoryView';
 
 export default function Dashboard() {
   return (
     <div>
-      <h1>hi</h1>
+      <CommitHistoryView/>
     </div>
   );
 }
