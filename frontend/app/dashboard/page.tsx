@@ -56,7 +56,7 @@ export default function Dashboard() {
         </div>
       }
       {currentView == 'project' &&
-      'project'}
+      <CommitHistoryView/>}
       {currentView == 'feature' &&
       'feature'}
       {currentView == 'user' &&

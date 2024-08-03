@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import CommitHistoryScrollbar from "./CommitHistoryScrollbar";
 import CommitHistoryContent from "./CommitHistoryContent";
 
@@ -34,14 +34,16 @@ const commits: Commit[] = [
   },
 ];
 
-const CommitHistoryView = (repo: CommitHistoryScrollBarProps) => {
+const CommitHistoryView = () => {
+  const [SHA, setSHA] = useState('');
+
   return (
     <div className="flex">
       <div className="flex-1 basis-1/4">
         <CommitHistoryScrollbar commits={commits} />
       </div>
       <div className="flex-1 basis-3/4 px-10 py-6">
-        <CommitHistoryContent repo={repo} />
+        <CommitHistoryContent SHA={SHA} />
       </div>
     </div>
   );

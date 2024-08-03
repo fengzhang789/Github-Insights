@@ -26,11 +26,6 @@ const PageContent = (props: Props) => {
   const code = searchParams.get("code");
   const [login, result] = useLoginMutation();
 
-  const extractRepositoryNames = (repos : any) => {
-    console.log("repo: ", repos);
-    return repos?.map((repo : any) => repo.name);
-  };
-
   useEffect(() => {
     if (code) {
       login({ code });
