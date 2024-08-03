@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 type Props = {}
 
 const Page = (props: Props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["accessJwt", "refreshJwt"]);  
+  const [cookies, setCookie, removeCookie] = useCookies(["accessJwt"]);  
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const [login, result] = useLoginMutation();
@@ -22,9 +22,8 @@ const Page = (props: Props) => {
 
   useEffect(() => {
     if (!result.isUninitialized) {
-      if (result.isSuccess && result.data.access_token && result.data.refresh_token) {
+      if (result.isSuccess && result.data.access_token) {
         setCookie("accessJwt", result.data.access_token);
-        setCookie("refreshJwt", result.data.refresh_token);
       }
     }
   }, [result, setCookie]); // Only run effect if `result` or `setCookie` changes
