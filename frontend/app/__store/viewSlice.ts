@@ -7,7 +7,7 @@ interface ViewSliceState {
 }
 
 const initialState: ViewSliceState = {
-  currentView: null,
+  currentView: 'user',
 };
 
 const viewSlice = createSlice({

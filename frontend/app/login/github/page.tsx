@@ -28,11 +28,6 @@ const PageContent = (props: Props) => {
   const [repositories, setRepositories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const extractRepositoryNames = (repos : any) => {
-    console.log("repo: ", repos);
-    return repos?.map((repo : any) => repo.name);
-  };
-
   useEffect(() => {
     if (code) {
       login({ code });
