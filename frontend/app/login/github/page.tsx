@@ -3,7 +3,7 @@
 import { useLoginMutation } from '@/app/__store/api';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 
 type Props = {}
@@ -13,6 +13,7 @@ const Page = (props: Props) => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const [login, result] = useLoginMutation();
+  const [repositories, setRepositories] = useState([]);
 
   useEffect(() => {
     if (code) {
@@ -24,13 +25,31 @@ const Page = (props: Props) => {
     if (!result.isUninitialized) {
       if (result.isSuccess && result.data.access_token) {
         setCookie("accessJwt", result.data.access_token);
+
+        console.log("cookies set")
+        // get user repositories
+        axios.post('http://localhost:5000/github/user/repositories', {
+          accessJwt: result.data.access_token,
+        })
+        .then(response => {
+          setRepositories(response.data);
+          console.log("user repositories set: ", repositories)
+        })
+        .catch(error => {
+          console.error('Error fetching repositories:', error);
+        });
+      } else {
+        console.log("not result.isSuccess && result.data.access_token && result.data.refresh_token")
+        console.log("result.isSuccess: ", result.isSuccess)
+        console.log("result.data: ",  result.data)
+        
       }
     }
   }, [result, setCookie]); // Only run effect if `result` or `setCookie` changes
 
   return (
     <div>
-      logging in...
+      <p>repositories: {repositories}</p>
     </div>
   )
 }
