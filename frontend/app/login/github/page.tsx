@@ -1,23 +1,25 @@
 "use client";
 
-import { useLoginMutation } from '@/app/__store/api';
+import { useLoginMutation, useGetUserRepositoriesQuery } from '@/app/__store/api';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useCookies } from 'react-cookie';
 
 type Props = {}
 
-const Page = (props: Props) => {
+const PageContent = (props: Props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["accessJwt"]);  
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const [login, result] = useLoginMutation();
   const [repositories, setRepositories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (code) {
       login({ code });
+    } else {
     }
   }, [code, login]); // Only run effect if `code` or `login` changes
 
@@ -25,6 +27,8 @@ const Page = (props: Props) => {
     if (!result.isUninitialized) {
       if (result.isSuccess && result.data.access_token) {
         setCookie("accessJwt", result.data.access_token);
+        
+        //const {repos, isSuccess} = useGetUserRepositoriesQuery(result.data.access_token);
 
         console.log("cookies set")
         // get user repositories
@@ -37,6 +41,9 @@ const Page = (props: Props) => {
         })
         .catch(error => {
           console.error('Error fetching repositories:', error);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
       } else {
         console.log("not result.isSuccess && result.data.access_token")
@@ -49,9 +56,21 @@ const Page = (props: Props) => {
 
   return (
     <div>
-      <p>repositories: {repositories}</p>
+      {isLoading ? (
+        <p>Loading repositories...</p>
+      ) : (
+        <p>repositories: {JSON.stringify(repositories)}</p>
+      )}
     </div>
   )
 }
 
-export default Page
+const Page = (props: Props) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageContent {...props} />
+    </Suspense>
+  )
+}
+
+export default Page;
