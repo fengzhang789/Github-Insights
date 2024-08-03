@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import { NavigationMenuDemo } from "@/app/__components/NavBar";
+import DemoSection from "@/app/__components/DemoSection";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CodeDemo from "@/public/CodeDemo.png";
@@ -55,6 +56,8 @@ export default function Home() {
           </CatchyText>
         </StyledBox>
       </LeftAlignedContainer>
+
+      <DemoSection/>
 
       <FeaturesSection>
       <h2>Key Features</h2>
@@ -290,6 +293,8 @@ const FeatureCard = styled.div`
   backdrop-filter: blur(20px);
   padding: 30px;
   border-radius: 8px;
+  min-height: 16rem;
+  z-index: -1;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -308,6 +313,10 @@ const FeatureCard = styled.div`
   p {
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    min-height: auto;
   }
 `;
 
@@ -329,18 +338,42 @@ const StepGrid = styled.div`
   margin-top: 40px;
 `;
 
+const rgbEffect = keyframes`
+  0% { border-color: rgb(255,0,0); }
+  20% { border-color: rgb(0,255,0); }
+  40% { border-color: rgb(0,0,255); }
+  60% { border-color: rgb(255,0,0); }
+  80% { border-color: rgb(0,255,0); }
+  100% { border-color: rgb(0,0,255); }
+`;
+
 const Step = styled.div`
   text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    #000000,
+    #242424
+  );
+
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 
   h3 {
     font-size: 1.3rem;
     margin-bottom: 15px;
-    color: #333;
+    color: #d4d4d4;
   }
 
   p {
     font-size: 1rem;
-    color: #666;
+    color: #a0a0a0;
   }
 `;
 
@@ -458,8 +491,6 @@ const CTASection = styled.section`
     z-index: 1;
   }
 `;
-
-
 
 // Footer
 const Footer = styled.footer`
