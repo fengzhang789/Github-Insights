@@ -112,9 +112,3 @@ export default function Home() {
     </main>
   );
 }
-
-// h1 styled component
-const ExampleStyledComponent = styled.h1`
-  height: auto;
-  // OTHER CSS.
-`;
