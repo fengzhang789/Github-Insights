@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import CommitHistoryView from './__components/CommitHistoryView';
 import TopBar from "../__components/Topbar";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "../__store/store";
@@ -25,6 +26,7 @@ export default function Dashboard() {
       'feature'}
       {currentView == 'user' &&
       'user'}
+      <CommitHistoryView/>
     </div>
   );
 }
