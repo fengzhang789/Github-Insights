@@ -90,7 +90,7 @@ export const handleGetAppRepositoryInformation = async (req: Request, res: Respo
   }
 }
 
-export const handleGetUserRepositories = async (req: Request<{ accessJwt: string, refreshJwt: string }>, res: Response) => {
+export const handleGetUserRepositories = async (req: Request<{ accessJwt: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
@@ -123,5 +123,23 @@ export const handleLoginGithub = async (req: Request<{ code: string }>, res: Res
   } catch (error: any) {
     console.log(error.message)
     res.status(500).send(error.message)
+  }
+}
+
+export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string }>, res: Response) => {
+  try {
+    const octokit = new Octokit({
+      auth: req.body.accessJwt
+    })
+
+    const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+
+    res.send(response.data)
+  } catch (error: any) {
+    res.send(error.message)
   }
 }

@@ -112,3 +112,19 @@ export const handleLoginGithub = (req, res) => __awaiter(void 0, void 0, void 0,
         res.status(500).send(error.message);
     }
 });
+export const handleGetRepositoryCommits = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const octokit = new Octokit({
+            auth: req.body.accessJwt
+        });
+        const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        res.send(response.data);
+    }
+    catch (error) {
+        res.send(error.message);
+    }
+});
