@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type ViewState = 'project' | 'feature' | 'user';
+type ViewState = null | 'project' | 'feature' | 'user';
 
 interface ViewSliceState {
   currentView: ViewState;
 }
 
 const initialState: ViewSliceState = {
-  currentView: 'project',
+  currentView: null,
 };
 
 const viewSlice = createSlice({
