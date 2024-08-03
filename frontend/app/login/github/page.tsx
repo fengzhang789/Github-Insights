@@ -30,7 +30,7 @@ const PageContent = (props: Props) => {
 
   const extractRepositoryNames = (repos : any) => {
     console.log("repo: ", repos);
-    return repos.map((repo : any) => repo.name);
+    return repos?.map((repo : any) => repo.name);
   };
 
   useEffect(() => {
