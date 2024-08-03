@@ -31,7 +31,9 @@ export default function Home() {
       <NavBar className={isScrolled ? "scrolled" : ""}>
         <NavigationMenuDemo />
         <NavBarButton variant={isScrolled ? "outline" : "default"}>
-          Get Started
+          <a href="/login">
+            Get Started
+          </a>
         </NavBarButton>
       </NavBar>
       <ContentContainer>
@@ -41,7 +43,10 @@ export default function Home() {
             Your Commits, <GradientHeader>Reimagined.</GradientHeader>
           </span>
         </BoldHeader>
-        <StyledButton>Get Started with GitInsights &gt;</StyledButton>
+        <StyledButton> 
+          <a href="/login"> 
+            Get Started with GitInsights &gt;
+          </a></StyledButton>
       </ContentContainer>
       <StyledImage src={CodeDemo} alt="Example" />
       <LeftAlignedContainer>

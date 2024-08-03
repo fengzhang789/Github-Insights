@@ -114,7 +114,6 @@ interface ViewOptionProps {
   }
 
 const ViewOption = styled.div<ViewOptionProps>`
-  padding: 10px;
   width: 6rem; /* Set this to your desired width */
   height: 6rem; /* Set this to the same value as width */
   display: flex;
@@ -127,6 +126,7 @@ const ViewOption = styled.div<ViewOptionProps>`
   transition: all 0.3s ease;
   text-align: center; /* Ensure text is centered in case of multiline */
   cursor: pointer;
+  margin-top: -1rem;
 `;
 
 
