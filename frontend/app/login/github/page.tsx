@@ -27,11 +27,6 @@ const PageContent = (props: Props) => {
   const [repositories, setRepositories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const extractRepositoryNames = (repos: any) => {
-    console.log("repo: ", repos);
-    return repos?.map((repo: any) => repo.name);
-  };
-
   useEffect(() => {
     if (code) {
       login({ code });
@@ -74,19 +69,7 @@ const PageContent = (props: Props) => {
 
   return (
     <div>
-      {isLoading ? (
-        <p>Loading repositories...</p>
-      ) : (
-        <ul>
-          {extractRepositoryNames(repositories).map(
-            (repo: any, index: number) => (
-              <li key={index}>
-                <button className="repo-button"> {repo} </button>
-              </li>
-            ),
-          )}
-        </ul>
-      )}
+      <p>Loading repositories...</p>
     </div>
   );
 };
