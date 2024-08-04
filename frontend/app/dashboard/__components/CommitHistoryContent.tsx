@@ -76,13 +76,13 @@ const CommitHistoryContent = ({
           <div className="mb-4">
             <h1 className="text-3xl font-bold"> Files Changed </h1>
           </div>
-          <div className="max-w-[70svw]">
-            <div className="flex space-x-4 mb-[3rem] overflow-x-auto scrollbar-thin max-w-[70svw]">
+          <div className="">
+            <div className="flex space-x-4 mb-[3rem] overflow-x-auto scrollbar-thin">
               {commit.files.map((file) => (
                 <button key={file.sha} onClick={() => {
                   console.log("commit history file changed")
                   setCurrentFile(file)
-                }} className="w-full">
+                }} className="">
                   <CommitHistoryFileChange
                     key={file.sha}
                     title={file.filename}
