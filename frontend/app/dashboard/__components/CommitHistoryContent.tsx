@@ -11,7 +11,7 @@ import {
 const CommitHistoryContent = ({
   SHA,
   owner,
-  repo,
+  repo
 }: CommitHistoryContentProps) => {
   const [commit, setCommit] = useState<ShaCommit | null>(null);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
