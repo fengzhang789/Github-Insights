@@ -42,6 +42,7 @@ const PageContent = (props: Props) => {
         //const {repos, isSuccess} = useGetUserRepositoriesQuery(result.data.access_token);
 
         console.log("cookies set", result.data.access_token);
+        router.push("/dashboard");
         
         // get user repositories
         // axios
