@@ -26,7 +26,7 @@ const CommitHistoryView: React.FC<CommitHistoryViewProps> = ({
         />
       </div>
       <div className="flex-1 basis-3/4 px-10 py-6 max-w-[70svw]">
-        {repo ? (
+        {commitSHA ? (
           <div>
             <div className = "mb-4">
               <AddTagBar repo={repo}/>

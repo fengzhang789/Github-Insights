@@ -15,13 +15,13 @@ const DemoSection = () => {
 
     switch (activeView) {
         case "project":
-            textblurb = <div>text 1</div>;
+            textblurb = <div> Comprehensive overview of all commits for every project.</div>;
             break;
         case "feature":
-            textblurb = <div>text 2</div>;
+            textblurb = <div> Tree-based display for viewing branch intersectionality.</div>;
             break;
         case "user":
-            textblurb = <div>text 3</div>;
+            textblurb = <div>Sort through commits by specific user.</div>;
             break;
         default:
             textblurb = <div>default text</div>;
@@ -73,7 +73,7 @@ const DemoSection = () => {
           ))}
         </ViewSelector>
         <ImageContainer>
-        <DemoImage src={`/${activeView}-view.jpg`} alt={`${activeView} view`}/>
+        <DemoImage src={`/${activeView}-view.png`} alt={`${activeView} view`}/>
             {textblurb}
         </ImageContainer>
       </DemoContent>
