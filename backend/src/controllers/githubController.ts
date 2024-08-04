@@ -262,6 +262,7 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
 
       return {
         ...file,
+        patch: file.patch,
         analysis: {
           create: {
             analysis: fileAnalysis,
@@ -286,7 +287,7 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
         additions: response.data.stats.additions,
         deletions: response.data.stats.deletions,
         files: {
-          create: fileData
+          create: fileData,
         }
       },
       include: {
