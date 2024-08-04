@@ -291,3 +291,41 @@ export const handleGetRepositoryBranches = (req, res) => __awaiter(void 0, void 
         res.status(500).send(error.message);
     }
 });
+export const handlePostTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { repoName, tag } = req.body;
+        // Check if the repo exists
+        const repo = yield prisma.repo.findUnique({
+            where: {
+                repoName: repoName,
+            },
+        });
+        if (repo) {
+            // Append the tag to the existing repo's tags
+            yield prisma.repo.update({
+                where: {
+                    repoName: repoName,
+                },
+                data: {
+                    tags: {
+                        push: tag,
+                    },
+                },
+            });
+        }
+        else {
+            // Create a new repo with the tag
+            yield prisma.repo.create({
+                data: {
+                    repoName: repoName,
+                    tags: [tag],
+                },
+            });
+        }
+        console.log("Tag " + tag + "added successfully");
+        res.status(200).send("Tag added successfully");
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
+});
