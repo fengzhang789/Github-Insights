@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-
 import { useEffect, useState } from "react";
 import CommitHistoryView from "./__components/CommitHistoryView";
 import TopBar from "../__components/Topbar";
@@ -11,40 +10,43 @@ import { setSelectedRepo } from "../__store/repoSlice";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { TUserRepository } from "../__typings/api";
-import { current } from "@reduxjs/toolkit";
 import { useGetUserRepositoriesQuery } from "../__store/api";
 import Feature from "./__components/Feature";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const currentView = useSelector((state: RootState) => state.view.currentView);
-  const [selectedRepository, setSelectedRepository] = useState<TUserRepository | null>(null);
+  const [selectedRepository, setSelectedRepository] =
+    useState<TUserRepository | null>(null);
   const [commitHistory, setCommitHistory] = useState(null);
   const [repoName, setRepoName] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
-  const {data: repos, isSuccess} = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
-  
-  const [userList, setUserList] = useState<Array<string>>([])
-  const [selectedUser, setSelectedUser] = useState<string>("")
+  const { data: repos, isSuccess } = useGetUserRepositoriesQuery({
+    accessJwt: cookies.accessJwt,
+  });
+
+  const [userList, setUserList] = useState<Array<string>>([]);
+  const [selectedUser, setSelectedUser] = useState<string>("");
 
   const handleClick = () => {
-    setSelectedRepository(selectedRepository)
+    setSelectedRepository(selectedRepository);
     getRepoInfo();
     dispatch(setView("project"));
   };
 
   const handleSelectChange = (event: any) => {
-    const selectedRepo = repos?.find((repo) => repo.name === event.target.value);
+    const selectedRepo = repos?.find(
+      (repo) => repo.name === event.target.value,
+    );
 
     if (selectedRepo) {
       setSelectedRepository(selectedRepo);
-      setRepoName(selectedRepo["name"])
-      setName(selectedRepo["owner"]["login"])
+      setRepoName(selectedRepo["name"]);
+      setName(selectedRepo["owner"]["login"]);
     }
   };
 
-  
   const getRepoInfo = () => {
     if (selectedRepository) {
       axios
@@ -65,7 +67,11 @@ export default function Dashboard() {
           setCommitHistory(formattedCommitHistory);
 
           // Extract unique users
-          const uniqueUsers = Array.from(new Set(response.data.map((commit: any) => commit.commit.author.name)));
+          const uniqueUsers = Array.from(
+            new Set(
+              response.data.map((commit: any) => commit.commit.author.name),
+            ),
+          );
           setUserList(uniqueUsers as string[]);
 
           console.log("commit history:", formattedCommitHistory);
@@ -82,7 +88,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="max-w-[100svw]">
+    <div className="dashboard-container">
       <TopBar users={userList} setUser={setSelectedUser} />
       {currentView == null && (
         <div className="h-[80svh] grid place-items-center">
@@ -96,11 +102,12 @@ export default function Dashboard() {
                 className="w-[280px] text-black p-[9px] rounded-lg bg-white"
               >
                 <option value="">Select a Project</option>
-                {repos != null && repos.map((repo, index) => (
-                  <option key={index} value={repo.name}>
-                    {repo.name}
-                  </option>
-                ))}
+                {repos != null &&
+                  repos.map((repo, index) => (
+                    <option key={index} value={repo.name}>
+                      {repo.name}
+                    </option>
+                  ))}
               </select>
               <button
                 onClick={handleClick}
@@ -120,13 +127,9 @@ export default function Dashboard() {
           selectedUser={selectedUser}
         />
       )}
-      {currentView == "feature" && 
-      <Feature
-      name={name}
-      repo={repoName}
-      cookie={cookies["accessJwt"]}
-      />
-      }
+      {currentView == "feature" && (
+        <Feature name={name} repo={repoName} cookie={cookies["accessJwt"]} />
+      )}
     </div>
   );
 }
