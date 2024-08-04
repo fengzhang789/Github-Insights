@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [repoName, setRepoName] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
-  const {data: repos, isSuccess} = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
+  const { data: repos, isSuccess } = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
 
   const handleClick = () => {
     setSelectedRepository(selectedRepository)
@@ -44,7 +44,6 @@ export default function Dashboard() {
   const getRepoInfo = () => {
     console.log("abc123");
     if (selectedRepository) {
-      // we need to see if the view is project view... this is not READY YET!!!!!!!
       console.log(selectedRepository["owner"]["login"]);
       console.log(selectedRepository["name"]);
       axios
