@@ -134,13 +134,13 @@ export const handleLoginGithub = async (req: Request<{ code: string }>, res: Res
   }
 }
 
-export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string }>, res: Response<TCommitInfo>) => {
+export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string, sha?: string }>, res: Response<TCommitInfo>) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
     })
 
-    const initialResponse = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+    const initialResponse = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${req.body.sha ?? ""}`, {
       headers: {
         'X-GitHub-Api-Version': '2022-11-28'
       }
@@ -165,7 +165,30 @@ export const handleGetRepositoryCommit = async (req: Request<{ owner: string, re
       }
     })
 
-    res.status(200).send(response.data)
+    const modifiedResponse = {
+      ...response.data,
+      files: response.data.files.map(async (file: any) => {
+        const textData = await axios.get(file.raw_url)
+
+        return {
+          sha: file.sha,
+          status: file.status,
+          filename: file.filename,
+          additions: file.additions,
+          deletions: file.deletions,
+          changes: file.changes,
+          blob_url: file.blob_url,
+          raw_url: file.raw_url,
+          contents_url: file.contents_url,
+          patch: file.patch,
+          fileTextContent: textData
+        }
+      })
+    }
+
+    await Promise.all(modifiedResponse.files)
+
+    res.status(200).send(modifiedResponse)
   } catch (error: any) {
     res.status(500).send(error.message)
   }

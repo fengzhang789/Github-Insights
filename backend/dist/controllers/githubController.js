@@ -125,11 +125,12 @@ export const handleLoginGithub = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 export const handleGetRepositoryCommits = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const octokit = new Octokit({
             auth: req.body.accessJwt
         });
-        const initialResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+        const initialResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${(_a = req.body.sha) !== null && _a !== void 0 ? _a : ""}`, {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
@@ -151,7 +152,24 @@ export const handleGetRepositoryCommit = (req, res) => __awaiter(void 0, void 0,
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.status(200).send(response.data);
+        const modifiedResponse = Object.assign(Object.assign({}, response.data), { files: response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
+                const textData = yield axios.get(file.raw_url);
+                return {
+                    sha: file.sha,
+                    status: file.status,
+                    filename: file.filename,
+                    additions: file.additions,
+                    deletions: file.deletions,
+                    changes: file.changes,
+                    blob_url: file.blob_url,
+                    raw_url: file.raw_url,
+                    contents_url: file.contents_url,
+                    patch: file.patch,
+                    fileTextContent: textData
+                };
+            })) });
+        yield Promise.all(modifiedResponse.files);
+        res.status(200).send(modifiedResponse);
     }
     catch (error) {
         res.status(500).send(error.message);
