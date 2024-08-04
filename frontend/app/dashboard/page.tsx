@@ -65,7 +65,7 @@ export default function Dashboard() {
 
           // Extract unique users
           const uniqueUsers = Array.from(new Set(response.data.map((commit: any) => commit.commit.author.name)));
-          setUserList(uniqueUsers);
+          setUserList(uniqueUsers as string[]);
 
           console.log("commit history:", formattedCommitHistory);
           console.log("unique users:", uniqueUsers);

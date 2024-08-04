@@ -67,41 +67,24 @@ export function NavigationMenuDemo() {
                     href="/"
                   >
                     <div className="mb-2 mt-4 text-lg font-medium text-black">
-                      shadcn/ui
+                      GitInsights
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground dark:text-muted-foreground-dark">
-                      Beautifully designed components that you can copy and
-                      paste into your apps. Accessible. Customizable. Open
-                      Source.
+                      Visualizing and documenting your Git repositories. Illuminate your code history and enhance your commits.
                     </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
+              <ListItem href="#views" title="Views">
+                Explore diverse views to enhance your visualization capabilities.
               </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
+              <ListItem href="#features" title="Features">
+                Discover the range of features that GitInsights offers to elevate your experience.
               </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
+              <ListItem href="#testimonials" title="Testimonials">
+                Hear what our users have to say about their experiences.
               </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

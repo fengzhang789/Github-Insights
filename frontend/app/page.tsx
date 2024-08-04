@@ -57,7 +57,7 @@ export default function Home() {
           Understand Commits from a <br />
         </h1>
 
-        <GradientHeader>Different Perspective.</GradientHeader>
+        <GradientHeader id='views'>Different Perspective.</GradientHeader>
         <StyledBox>
           <CatchyText>
             AI-powered commit histories, summarized so you know where to look
@@ -65,9 +65,9 @@ export default function Home() {
         </StyledBox>
       </LeftAlignedContainer>
 
-      <DemoSection />
+      <DemoSection/>
 
-      <FeaturesSection>
+      <FeaturesSection id='features'>
         <h2>Key Features</h2>
         <FeatureGrid>
           <FeatureCard>
@@ -118,7 +118,7 @@ export default function Home() {
         </StepGrid>
       </HowItWorksSection>
 
-      <TestimonialsSection>
+      <TestimonialsSection id='testimonials'>
         <h2>What Our Users Are Saying</h2>
         <TestimonialGrid>
           <Testimonial>
@@ -282,6 +282,7 @@ const LeftAlignedContainer = styled.div`
 
 const StyledBox = styled.div`
   position: relative;
+  z-index: -1;
   width: 60%;
   margin: 20px 0;
   padding: 20px;
@@ -334,7 +335,7 @@ const CatchyText = styled.p`
 // Features Section
 const FeaturesSection = styled.section`
   padding: 80px 60px;
-
+  z-index: 0;
   h2 {
     font-size: 3rem;
     font-weight: 600;
@@ -360,7 +361,7 @@ const FeatureCard = styled.div`
   -webkit-backdrop-filter: blur(20px);
   padding: 30px;
   border-radius: 16px;
-  z-index: 1;
+  z-index: -1;
   min-height: 16rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -445,6 +446,7 @@ const rgbEffect = keyframes`
 `;
 
 const Step = styled.div`
+  z-index: -1;
   text-align: center;
   padding: 20px;
   border-radius: 10px;
