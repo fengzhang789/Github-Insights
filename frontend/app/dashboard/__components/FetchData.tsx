@@ -126,19 +126,18 @@ export const fetchBranchData = async (
   // Merge all commit dictionaries into one array
   const allCommits = Object.values(branchData).flat();
 
-  // Remove all key-value pairs except for sha and date
-  const filteredCommits = allCommits.map((commit: any) => ({
-    sha: commit.sha,
-    date: commit.date,
-  }));
+  // Remove duplicate commits based on sha
+  const uniqueCommits = Array.from(
+    new Map(allCommits.map((commit: any) => [commit.sha, commit])).values(),
+  );
 
   // Sort the array by date
-  filteredCommits.sort(
+  uniqueCommits.sort(
     (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime(),
   );
 
   // Apply the ID scheme
-  const shaToIdMap = filteredCommits.reduce(
+  const shaToIdMap = uniqueCommits.reduce(
     (acc, commit, index) => {
       acc[commit.sha] = index + 1;
       return acc;
