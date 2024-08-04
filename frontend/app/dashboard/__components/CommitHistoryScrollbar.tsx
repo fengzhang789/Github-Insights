@@ -23,11 +23,30 @@ export default function CommitHistoryScrollBar({
 }
 
 const ScrollContainer = styled.div`
-  height: 80vh;
+  height: 90vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 5px;
+  width: 30svw;
+
+/* WebKit browsers */
+  &::-webkit-scrollbar {
+    width: 8px; /* Adjust width as needed */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent; /* No background for track */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: white; /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Optional: rounded corners for the thumb */
+  }
+
+  /* Firefox */
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: white transparent; /* Thumb color and track color */
 `;
 
 const CardWrapper = styled.div`
