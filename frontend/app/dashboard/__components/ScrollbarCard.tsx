@@ -21,7 +21,8 @@ export default function ScrollbarCard({
         <CardHeader>
 
           <CardTitle className="text-lg font-semibold truncate-multiline">
-            Commit Message: {commit.message}
+            {commit.message}
+            <Image srhrefc="https://www.svgrepo.com/show/327279/git-branch.svg" alt="git branch" />
           </CardTitle>
 
           <div className="flex items-center mb-2">
