@@ -88,14 +88,13 @@ const CommitHistoryContent = ({
         <>
           <div className="flex justify-between items-center mb-4 max-w-[70svw]">
             <h1 className="text-4xl font-bold">Commit Summary: {commitSummary.recommendedCommitMessage}</h1>
-            <p className="text-gray-600">Branch: Main</p>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 mb-4">
             {commitSummary.tags.split('///').map((tag, index) => (
               <Tag text={tag} key={index}/>
             ))}
           </div>
-          <div className="text-lg mb-[3rem]">
+          <div className="text-lg mb-[2rem]">
             <p>
               {commitSummary?.entireCommitAnalysis}
             </p>
