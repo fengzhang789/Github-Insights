@@ -38,6 +38,7 @@
     "three.js": "^0.77.1"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.3",
     "@types/next": "^9.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
