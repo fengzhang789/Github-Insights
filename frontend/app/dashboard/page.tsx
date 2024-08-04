@@ -126,7 +126,12 @@ export default function Dashboard() {
         />
       )}
       {currentView == "feature" && (
-        <Feature name={name} repo={repoName} cookie={cookies["accessJwt"]} />
+        <Feature
+          name={name}
+          repo={repoName}
+          cookie={cookies["accessJwt"]}
+          selectedUser={selectedUser}
+        />
       )}
     </div>
   );

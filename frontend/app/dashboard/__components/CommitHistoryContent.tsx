@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import CommitHistoryFileChange from "./CommitHistoryFileChange";
-import Tag from './Tag';
+import Tag from "./Tag";
 import axios from "axios";
 import {
   CommitHistoryContentProps,
   ShaCommit,
   ShaCommitSummary,
-  File, 
-  FileSummary
+  File,
+  FileSummary,
 } from "@/app/__typings/localtypes";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
-import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
-
+import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 
 const CommitHistoryContent = ({
   SHA,
   owner,
-  repo
+  repo,
 }: CommitHistoryContentProps) => {
   const [commit, setCommit] = useState<ShaCommit | null>(null);
-  const [commitSummary, setCommitSummary] = useState<ShaCommitSummary | null>(null);
+  const [commitSummary, setCommitSummary] = useState<ShaCommitSummary | null>(
+    null,
+  );
   const [currentFile, setCurrentFile] = useState<FileSummary | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
@@ -48,11 +49,14 @@ const CommitHistoryContent = ({
   const getCommitSummary = () => {
     if (owner && repo && SHA) {
       axios
-        .post(`http://localhost:5000/github/repository/commit/${SHA}/analysis`, {
-          accessJwt: cookies.accessJwt,
-          owner: owner,
-          repo: repo,
-        })
+        .post(
+          `http://localhost:5000/github/repository/commit/${SHA}/analysis`,
+          {
+            accessJwt: cookies.accessJwt,
+            owner: owner,
+            repo: repo,
+          },
+        )
         .then((response) => {
           setCommitSummary(response.data);
           console.log("get commit summary data: ", response);
@@ -67,10 +71,10 @@ const CommitHistoryContent = ({
 
   const getFileContent = () => {
     if (commit && currentFile) {
-      
-      axios.post("http://localhost:5000/github/raw-url/content", {
-        rawURL: currentFile.raw_url,
-      })
+      axios
+        .post("http://localhost:5000/github/raw-url/content", {
+          rawURL: currentFile.raw_url,
+        })
         .then((response) => {
           setFileContent(response.data);
         })
@@ -78,13 +82,15 @@ const CommitHistoryContent = ({
           console.error("Error fetching file content:", error);
         });
     }
-  }
+  };
 
   useEffect(() => {
-    console.log("update SHA");
-    setIsLoading(true)
-    getCommitInfo();
-    getCommitSummary();
+    if (SHA) {
+      console.log("update SHA");
+      setIsLoading(true);
+      getCommitInfo();
+      getCommitSummary();
+    }
   }, [SHA]);
 
   useEffect(() => {
@@ -92,26 +98,28 @@ const CommitHistoryContent = ({
     getFileContent();
   }, [currentFile]);
 
-  const isCommitSummaryIncludesSlash = commitSummary?.tags.includes('///');
+  const isCommitSummaryIncludesSlash = commitSummary?.tags.includes("///");
 
   return (
     <>
       {commitSummary && !isLoading ? (
         <>
           <div className="flex space-x-2 mb-4">
-            <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
+            <h1 className="text-4xl font-bold">
+              {" "}
+              {commitSummary.recommendedCommitMessage}
+            </h1>
             <p className="text-gray-600">Branch: Main</p>
           </div>
           <div className="flex space-x-2 mb-[1rem]">
-            {isCommitSummaryIncludesSlash && commitSummary.tags.split('///').map((tag, index) => (
-              <Tag text={tag} key={index}/>
-            ))}
+            {isCommitSummaryIncludesSlash &&
+              commitSummary.tags
+                .split("///")
+                .map((tag, index) => <Tag text={tag} key={index} />)}
             {!isCommitSummaryIncludesSlash && <Tag text={"refactor"} />}
           </div>
           <div className="text-lg mb-[2rem]">
-            <p>
-              {commitSummary?.entireCommitAnalysis}
-            </p>
+            <p>{commitSummary?.entireCommitAnalysis}</p>
           </div>
           <div className="mb-4">
             <h1 className="text-3xl font-bold"> Files Changed </h1>
@@ -119,10 +127,14 @@ const CommitHistoryContent = ({
           <div className="">
             <div className="flex space-x-4 mb-[3rem] overflow-x-auto scrollbar-thin">
               {commitSummary.files.map((file) => (
-                <button key={file.sha} onClick={() => {
-                  console.log("commit history file changed")
-                  setCurrentFile(file)
-                }} className="">
+                <button
+                  key={file.sha}
+                  onClick={() => {
+                    console.log("commit history file changed");
+                    setCurrentFile(file);
+                  }}
+                  className=""
+                >
                   <CommitHistoryFileChange
                     key={file.sha}
                     title={file.filename}
@@ -136,9 +148,14 @@ const CommitHistoryContent = ({
           <div className="mb-10 mt-10 flex justify-center items-center">
             {fileContent ? (
               <>
-                <Editor height="90vh" defaultLanguage="typescript" value={fileContent} width="60vw" theme="vs-dark" />
+                <Editor
+                  height="90vh"
+                  defaultLanguage="typescript"
+                  value={fileContent}
+                  width="60vw"
+                  theme="vs-dark"
+                />
               </>
-              
             ) : (
               <p>No file selected</p>
             )}
@@ -146,12 +163,8 @@ const CommitHistoryContent = ({
         </>
       ) : (
         <div className="flex justify-center items-center h-full">
-          {isLoading &&
-            <CircularProgress color="primary"></CircularProgress>
-          }
-          {!isLoading && 
-          <p className="text-center">Choose a commit</p>
-          }
+          {isLoading && <CircularProgress color="primary"></CircularProgress>}
+          {!isLoading && <p className="text-center">Choose a commit</p>}
         </div>
       )}
     </>

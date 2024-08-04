@@ -78,6 +78,7 @@ const fetchCommitDetails = async (
       author: commit.commit.author.name,
       message: commit.commit.message,
       date: commit.commit.author.date,
+      avatar: commit.author.avatar_url,
     }));
 
     return simplifiedData;

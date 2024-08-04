@@ -57,7 +57,7 @@ export default function Home() {
           Understand Commits from a <br />
         </h1>
 
-        <GradientHeader id='views'>Different Perspective.</GradientHeader>
+        <GradientHeader id="views">Different Perspective.</GradientHeader>
         <StyledBox>
           <CatchyText>
             AI-powered commit histories, summarized so you know where to look
@@ -65,9 +65,9 @@ export default function Home() {
         </StyledBox>
       </LeftAlignedContainer>
 
-      <DemoSection/>
+      <DemoSection />
 
-      <FeaturesSection id='features'>
+      <FeaturesSection id="features">
         <h2>Key Features</h2>
         <FeatureGrid>
           <FeatureCard>
@@ -97,7 +97,9 @@ export default function Home() {
       </FeaturesSection>
 
       <HowItWorksSection>
-        <h2>How GitInsights <GradientHeader> Works. </GradientHeader> </h2>
+        <h2>
+          How GitInsights <GradientHeader> Works. </GradientHeader>{" "}
+        </h2>
         <StepGrid>
           <Step>
             <h3>1. Connect Your Repository</h3>
@@ -118,7 +120,7 @@ export default function Home() {
         </StepGrid>
       </HowItWorksSection>
 
-      <TestimonialsSection id='testimonials'>
+      <TestimonialsSection id="testimonials">
         <h2>What Our Users Are Saying</h2>
         <TestimonialGrid>
           <Testimonial>
@@ -139,20 +141,20 @@ export default function Home() {
       </TestimonialsSection>
 
       <CTASection>
-      <GradientWrapper>
-        <GradientSection />
-      </GradientWrapper>
-      <ContentWrapper>
-        <h2>Ready to Reimagine Your Commits?</h2>
-        <p>
-          Join thousands of developers who have transformed their workflow with
-          GitInsights.
-        </p>
-        <Link href='/login'>
-          <StyledButton>Start Your Free Trial</StyledButton>
-        </Link>
-      </ContentWrapper>
-    </CTASection>
+        <GradientWrapper>
+          <GradientSection />
+        </GradientWrapper>
+        <ContentWrapper>
+          <h2>Ready to Reimagine Your Commits?</h2>
+          <p>
+            Join thousands of developers who have transformed their workflow
+            with GitInsights.
+          </p>
+          <Link href="/login">
+            <StyledButton>Start Your Free Trial</StyledButton>
+          </Link>
+        </ContentWrapper>
+      </CTASection>
 
       <Footer>
         <FooterDiv>
@@ -229,32 +231,38 @@ const StyledButton = styled(Button)`
   width: auto;
   height: auto;
   border-radius: 4px;
-  
+
   background: rgba(255, 255, 255, 0.1); // Glassy background
   backdrop-filter: blur(10px); // Blur effect for glassy look
-  
+
   color: transparent; // Transparent text color for gradient
   background-clip: text;
   -webkit-background-clip: text;
-  background-image: linear-gradient(to right, blue, purple, pink); // Gradient for text
-  
+  background-image: linear-gradient(
+    to right,
+    blue,
+    purple,
+    pink
+  ); // Gradient for text
+
   border: 2px solid transparent; // Transparent border for gradient
   border-image: linear-gradient(to right, blue, purple, pink) 1;
-  
+
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
+
   &:active {
     transform: translateY(1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
-
 
 const NavBarButton = styled(Button)`
   padding: 15px 20px; // Increase padding for a larger button
@@ -292,9 +300,9 @@ const StyledBox = styled.div`
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid white;
   overflow: hidden;
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -311,18 +319,22 @@ const StyledBox = styled.div`
     z-index: -1;
     animation: pulse 8s ease-in-out infinite;
   }
-  
+
   @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
   }
-  
+
   & > * {
     position: relative;
     z-index: 1;
   }
 `;
-
 
 const CatchyText = styled.p`
   font-size: 2rem; // Bigger font size
@@ -364,7 +376,9 @@ const FeatureCard = styled.div`
   z-index: -1;
   min-height: 16rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   border: 1px solid white;
   overflow: hidden;
 
@@ -374,7 +388,7 @@ const FeatureCard = styled.div`
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -391,10 +405,15 @@ const FeatureCard = styled.div`
     z-index: -1;
     animation: pulse 8s ease-in-out infinite;
   }
-  
+
   @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
   }
 
   & > * {
@@ -417,7 +436,6 @@ const FeatureCard = styled.div`
     min-height: auto;
   }
 `;
-
 
 // How It Works Section
 const HowItWorksSection = styled.section`
@@ -451,7 +469,7 @@ const Step = styled.div`
   padding: 20px;
   border-radius: 10px;
   background: linear-gradient(to top, #000000, #242424);
-  
+
   border: 1px solid transparent;
   border-image: linear-gradient(45deg, blue, violet, #ff69b4);
   border-image-slice: 1;
@@ -512,8 +530,6 @@ const Author = styled.p`
   font-weight: bold;
   color: #666;
 `;
-
-
 
 const FeatureList = styled.ul`
   list-style-type: none;

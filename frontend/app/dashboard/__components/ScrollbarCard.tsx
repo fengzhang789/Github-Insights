@@ -14,28 +14,29 @@ export default function ScrollbarCard({
   commit,
   setCommitSHA,
 }: ScrollbarCardProps) {
-
   return (
     <StyledButton onClick={() => setCommitSHA(commit.sha)}>
       <Card className="max-w-[30svw] text-wrap break-words">
         <CardHeader>
-
           <CardTitle className="text-lg font-semibold truncate-multiline">
             {commit.message}
           </CardTitle>
 
           <div className="flex items-center mb-2">
-
             <Avatar src={commit.avatar} alt={`${commit.name}'s avatar`} />
             <span className="w-[80%] text-wrap break-words">
-              <CardDescription className="text-sm text-gray-600">{commit.name}</CardDescription>
-              <CardDescription className="text-sm text-wrap break-words text-gray-500">{commit.email}</CardDescription>
+              <CardDescription className="text-sm text-gray-600">
+                {commit.name}
+              </CardDescription>
+              <CardDescription className="text-sm text-wrap break-words text-gray-500">
+                {commit.email}
+              </CardDescription>
             </span>
           </div>
         </CardHeader>
-        
+
         <CardFooter className="text-sm text-gray-500 break-all">
-          Date: {commit.date} <br/>
+          Date: {commit.date} <br />
           SHA: {commit.sha}
         </CardFooter>
       </Card>
