@@ -1,16 +1,14 @@
 "use client";
-import * as React from "react";
-import { useEffect, useState } from "react";
-import CommitHistoryView from "./__components/CommitHistoryView";
+import axios from "axios";
+import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { useDispatch, useSelector } from "react-redux";
 import TopBar from "../__components/Topbar";
-import { useSelector, useDispatch } from "react-redux";
+import { useGetUserRepositoriesQuery } from "../__store/api";
 import { RootState } from "../__store/store";
 import { setView } from "../__store/viewSlice";
-import { setSelectedRepo } from "../__store/repoSlice";
-import axios from "axios";
-import { useCookies } from "react-cookie";
 import { TUserRepository } from "../__typings/api";
-import { useGetUserRepositoriesQuery } from "../__store/api";
+import CommitHistoryView from "./__components/CommitHistoryView";
 import Feature from "./__components/Feature";
 
 export default function Dashboard() {

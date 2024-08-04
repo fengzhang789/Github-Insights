@@ -4,10 +4,14 @@ import ScrollbarCard from "./ScrollbarCard";
 import { CommitHistoryScrollbarProps } from "@/app/__typings/localtypes";
 
 export default function CommitHistoryScrollBar({
-  commitHistory,
   setCommitSHA,
   selectedUser
 }: CommitHistoryScrollbarProps) {
+  const { data: repoCommits } = useGetRepoCommitsQuery({
+    owner: selectedRepository?.owner.login ?? "",
+    repo: selectedRepository?.name ?? "",
+    accessJwt: cookies.accessJwt,
+  });
 
   const filteredCommits = selectedUser
     ? commitHistory?.filter(commit => commit.name === selectedUser)

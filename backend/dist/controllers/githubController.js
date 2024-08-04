@@ -336,3 +336,12 @@ export const handlePostTags = (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(500).send(error.message);
     }
 });
+export const handleGetRawFileText = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield axios.get(req.body.rawURL);
+        res.status(200).send(response.data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
+});

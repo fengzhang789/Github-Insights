@@ -10,6 +10,8 @@ import {
   File, 
   FileSummary
 } from "@/app/__typings/localtypes";
+import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
+
 
 const CommitHistoryContent = ({
   SHA,
@@ -60,8 +62,10 @@ const CommitHistoryContent = ({
 
   const getFileContent = () => {
     if (commit && currentFile) {
-      console.log("currentFile.raw_url", currentFile.raw_url)
-      axios.get(currentFile.raw_url)
+      
+      axios.post("http://localhost:5000/github/raw-url/content", {
+        rawURL: currentFile.raw_url,
+      })
         .then((response) => {
           setFileContent(response.data);
         })
@@ -121,9 +125,10 @@ const CommitHistoryContent = ({
           </div>
           <div className="mb-10 mt-10 flex justify-center items-center">
             {fileContent ? (
-              <div className="border border-gray-300 rounded-lg p-4 bg-white">
-                <pre className="whitespace-pre-wrap">{fileContent}</pre>
-              </div>
+              <>
+                <Editor height="90vh" defaultLanguage="typescript" value={fileContent} width="60vw" theme="vs-dark" />
+              </>
+              
             ) : (
               <p>No file selected</p>
             )}

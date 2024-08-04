@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleGetAppInformationRequest, handleGetAppInstallations, handleGetAppRepositoryInformation, handleGetCommitAnalysis, handleGetRepositoryBranches, handleGetRepositoryCommit, handleGetRepositoryCommitDiff, handleGetRepositoryCommits, handleGetUserRepositories, handleLoginGithub, handlePostTags } from "../controllers/githubController.js";
+import { handleGetAppInformationRequest, handleGetAppInstallations, handleGetAppRepositoryInformation, handleGetCommitAnalysis, handleGetRawFileText, handleGetRepositoryBranches, handleGetRepositoryCommit, handleGetRepositoryCommitDiff, handleGetRepositoryCommits, handleGetUserRepositories, handleLoginGithub, handlePostTags } from "../controllers/githubController.js";
 
 export const router = Router();
 
@@ -14,3 +14,4 @@ router.post('/repository/commit/:ref/diff', handleGetRepositoryCommitDiff);     
 router.post('/repository/commit/:ref/analysis', handleGetCommitAnalysis);
 router.post('/repository/branches', handleGetRepositoryBranches)
 router.post('/repository/tags', handlePostTags);
+router.post('/raw-url/content', handleGetRawFileText);

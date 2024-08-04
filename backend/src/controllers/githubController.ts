@@ -374,3 +374,12 @@ export const handlePostTags = async (req: Request<{ repoName: string; tag: strin
     res.status(500).send(error.message);
   }
 };
+
+export const handleGetRawFileText = async (req: Request<{ rawURL: string }>, res: Response) => {
+  try {
+    const response = await axios.get(req.body.rawURL)
+    res.status(200).send(response.data)
+  } catch (error: any) {
+    res.status(500).send(error.message)
+  }
+}
