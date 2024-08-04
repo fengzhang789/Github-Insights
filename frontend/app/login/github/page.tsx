@@ -31,7 +31,7 @@ const PageContent = (props: Props) => {
     if (code) {
       login({ code });
     } 
-  }, [code, login]); // Only run effect if `code` or `login` changes
+  }, [code, login]);
 
   useEffect(() => {
     if (!result.isUninitialized) {
@@ -40,7 +40,7 @@ const PageContent = (props: Props) => {
         router.push("/dashboard");  
       } 
     }
-  }, [result, setCookie]); // Only run effect if `result` or `setCookie` changes
+  }, [result, setCookie]);
 
   return (
     <div>

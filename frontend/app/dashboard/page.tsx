@@ -25,10 +25,9 @@ export default function Dashboard() {
   const {data: repos, isSuccess} = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
 
   const handleClick = () => {
-    console.log(selectedRepository);
-    dispatch(setSelectedRepo(selectedRepository));
-    dispatch(setView("project"));
+    setSelectedRepository(selectedRepository)
     getRepoInfo();
+    dispatch(setView("project"));
   };
 
   const handleSelectChange = (event: any) => {
@@ -41,20 +40,7 @@ export default function Dashboard() {
     }
   };
 
-  const getUserRepos = () => {
-    axios.post("http://localhost:5000/github/user/repositories", {
-      accessJwt: cookies.accessJwt,
-    })
-      .then((response) => {
-        dispatch(setRepoList(response.data));
-        console.log("fetched repo list")
-      })
-      .catch((error) => {
-        console.error("Error fetching repositories:", error);
-      })
-  }
-
-
+  
   const getRepoInfo = () => {
     console.log("abc123");
     if (selectedRepository) {
