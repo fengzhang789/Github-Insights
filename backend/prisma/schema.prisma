@@ -13,6 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Repo {
+  id                       String   @id @default(cuid())
+  repoName  String @unique
+  commits  Commit[]
+  tags String[]
+}
+
 model Commit {
   id                       String   @id @default(cuid())
   sha                      String   @unique
@@ -25,6 +32,8 @@ model Commit {
   entireCommitAnalysis     String   @default("")
   recommendedCommitMessage String   @default("")
   tags                     String   @default("")
+  repo Repo? @relation(fields: [repoId], references: [id])
+  repoId  String?
 }
 
 model File {

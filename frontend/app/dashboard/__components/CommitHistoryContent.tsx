@@ -14,7 +14,7 @@ import {
 const CommitHistoryContent = ({
   SHA,
   owner,
-  repo,
+  repo
 }: CommitHistoryContentProps) => {
   const [commit, setCommit] = useState<ShaCommit | null>(null);
   const [commitSummary, setCommitSummary] = useState<ShaCommitSummary | null>(null);
@@ -91,8 +91,8 @@ const CommitHistoryContent = ({
             <p className="text-gray-600">Branch: Main</p>
           </div>
           <div className="flex space-x-2">
-            {commitSummary.tags.split('///').map((tag) => (
-              <Tag text={tag}/>
+            {commitSummary.tags.split('///').map((tag, index) => (
+              <Tag text={tag} key={index}/>
             ))}
           </div>
           <div className="text-lg mb-[3rem]">

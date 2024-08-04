@@ -36,6 +36,7 @@ const PageContent = (props: Props) => {
   useEffect(() => {
     if (!result.isUninitialized) {
       if (result.isSuccess && result.data.access_token) {
+        console.log("token: ", result.data.access_token)
         setCookie("accessJwt", result.data.access_token, {path: "/", maxAge: 24 * 60 * 60 * 1000});
         router.push("/dashboard");  
       } 

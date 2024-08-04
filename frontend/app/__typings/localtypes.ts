@@ -11,11 +11,13 @@ export type CommitHistoryViewProps = {
   commitHistory: Commit[] | null;
   name: string | null;
   repo: string | null;
+  selectedUser: string | null;
 };
 
 export type CommitHistoryScrollbarProps = {
   commitHistory: Commit[] | null;
   setCommitSHA: (sha: string | null) => void;
+  selectedUser: string | null;
 };
 
 export type CommitHistoryContentProps = {

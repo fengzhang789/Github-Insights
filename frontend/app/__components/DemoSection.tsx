@@ -101,6 +101,7 @@ const DemoContainer = styled.section`
 const DemoContent = styled.div`
   display: flex;
   align-items: flex-start;
+  margin-top: 4rem;
 `;
 
 const ViewSelector = styled.div`
@@ -113,20 +114,35 @@ interface ViewOptionProps {
     active: boolean;
   }
 
-const ViewOption = styled.div<ViewOptionProps>`
-  width: 6rem; /* Set this to your desired width */
-  height: 6rem; /* Set this to the same value as width */
+ const ViewOption = styled.div<ViewOptionProps>`
+  width: 6rem;
+  height: 6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: ${props => props.active ? '#4a4a8f' : 'transparent'};
-  background: ${props => props.active ? 'linear-gradient(to top right, #4b0082, #8a2be2)' : ''};
-  border: ${props => props.active ? '3px solid white' : '1px solid gray'};
+  background-color: black;
+  position: relative;
   transition: all 0.3s ease;
-  text-align: center; /* Ensure text is centered in case of multiline */
+  text-align: center;
   cursor: pointer;
   margin-top: -1rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -3px; /* Adjust based on the border width */
+    left: -3px; /* Adjust based on the border width */
+    right: -3px; /* Adjust based on the border width */
+    bottom: -3px; /* Adjust based on the border width */
+    border-radius: 50%;
+    border: 3px solid transparent;
+    background: ${props => props.active 
+      ? 'linear-gradient(to top right, blue, purple, pink) border-box, black border-box' 
+      : 'white'};
+    background-clip: border-box;
+    z-index: -1;
+  }
 `;
 
 

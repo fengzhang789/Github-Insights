@@ -194,7 +194,7 @@ export const handleGetRepositoryCommit = async (req: Request<{ owner: string, re
   }
 }
 
-export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string, tags?: string }>, res: Response) => {
+export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
@@ -231,13 +231,21 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
         'accept': 'application/vnd.github.diff'
       }
     });
+    
+    const repo = await prisma.repo.findUnique({
+      where: {
+        repoName: req.body.repo,
+      }
+    });
+    const possibleTags = repo ? repo.tags : [];
+    const possibleTagsString = possibleTags.map((tag) => {`, ${tag}`}).join('');
 
     // const giveContext = await 
     const commitAnalysis = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
     const recommendedCommitMessage = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`); 
   
     const tags = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Which out of the following tags are the most appropriate tags for this commit? 
-      The possible tags: documentation, new feature, bug fix, refactor, optimization, ${req.body.tags}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
+      The possible tags: documentation, new feature, bug fix, refactor, optimization${possibleTagsString}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
       Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
 
     const fileAnalysisPromises = response.data.files.map(async (file: any) => {
@@ -327,3 +335,42 @@ export const handleGetRepositoryBranches = async (req: Request<{ owner: string, 
     res.status(500).send(error.message)
   }
 }
+
+export const handlePostTags = async (req: Request<{ repoName: string; tag: string }>, res: Response) => {
+  try {
+    const { repoName, tag } = req.body;
+
+    // Check if the repo exists
+    const repo = await prisma.repo.findUnique({
+      where: {
+        repoName: repoName,
+      },
+    });
+
+    if (repo) {
+      // Append the tag to the existing repo's tags
+      await prisma.repo.update({
+        where: {
+          repoName: repoName,
+        },
+        data: {
+          tags: {
+            push: tag,
+          },
+        },
+      });
+    } else {
+      // Create a new repo with the tag
+      await prisma.repo.create({
+        data: {
+          repoName: repoName,
+          tags: [tag],
+        },
+      });
+    }
+    console.log("Tag " + tag + " added successfully")
+    res.status(200).send("Tag added successfully");
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+};

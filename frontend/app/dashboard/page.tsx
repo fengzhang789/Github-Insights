@@ -22,7 +22,10 @@ export default function Dashboard() {
   const [repoName, setRepoName] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
-  const { data: repos, isSuccess } = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
+  const {data: repos, isSuccess} = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
+  
+  const [userList, setUserList] = useState<Array<string>>([])
+  const [selectedUser, setSelectedUser] = useState<string>("")
 
   const handleClick = () => {
     setSelectedRepository(selectedRepository)
@@ -42,10 +45,7 @@ export default function Dashboard() {
 
   
   const getRepoInfo = () => {
-    console.log("abc123");
     if (selectedRepository) {
-      console.log(selectedRepository["owner"]["login"]);
-      console.log(selectedRepository["name"]);
       axios
         .post("http://localhost:5000/github/repository/commits", {
           owner: selectedRepository["owner"]["login"],
@@ -62,7 +62,13 @@ export default function Dashboard() {
             avatar: commit.author.avatar_url,
           }));
           setCommitHistory(formattedCommitHistory);
+
+          // Extract unique users
+          const uniqueUsers = Array.from(new Set(response.data.map((commit: any) => commit.commit.author.name)));
+          setUserList(uniqueUsers as string[]);
+
           console.log("commit history:", formattedCommitHistory);
+          console.log("unique users:", uniqueUsers);
         })
         .catch((error) => {
           console.error("Error fetching commit history:", error);
@@ -76,7 +82,7 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-[100svw]">
-      <TopBar />
+      <TopBar users={userList} setUser={setSelectedUser} />
       {currentView == null && (
         <div className="h-[80svh] grid place-items-center">
           <div className="text-center">
@@ -89,7 +95,7 @@ export default function Dashboard() {
                 className="w-[280px] text-black p-[9px] rounded-lg bg-white"
               >
                 <option value="">Select a Project</option>
-                {repos.map((repo, index) => (
+                {repos != null && repos.map((repo, index) => (
                   <option key={index} value={repo.name}>
                     {repo.name}
                   </option>
@@ -110,10 +116,10 @@ export default function Dashboard() {
           commitHistory={commitHistory}
           name={name}
           repo={repoName}
+          selectedUser={selectedUser}
         />
       )}
       {currentView == "feature" && "feature"}
-      {currentView == "user" && "user"}
     </div>
   );
 }
