@@ -13,6 +13,7 @@ import { useCookies } from "react-cookie";
 import { TUserRepository } from "../__typings/api";
 import { current } from "@reduxjs/toolkit";
 import { useGetUserRepositoriesQuery } from "../__store/api";
+import Feature from "./__components/Feature";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -119,7 +120,13 @@ export default function Dashboard() {
           selectedUser={selectedUser}
         />
       )}
-      {currentView == "feature" && "feature"}
+      {currentView == "feature" && 
+      <Feature
+      name={name}
+      repo={repoName}
+      cookie={cookies["accessJwt"]}
+      />
+      }
     </div>
   );
 }
