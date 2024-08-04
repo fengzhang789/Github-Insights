@@ -16,7 +16,7 @@ const llamaGenerate = (prompt) => __awaiter(void 0, void 0, void 0, function* ()
     const response = yield openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
-            { role: "system", content: "You are outputting analysis to be put onto a website analyzing git commits and git diffs. You generally want to keep these code and format free. Just output the sentence if possible." },
+            { role: "system", content: "You are analyzing git commits and git diffs. Just output the sentence." },
             { role: "user", content: prompt },
         ],
         max_tokens: 1024,

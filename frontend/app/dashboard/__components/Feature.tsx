@@ -61,10 +61,9 @@ const GitTree: React.FC<{ branches: Branch[] }> = ({ branches }) => {
     const root = createGitTree(branches);
     console.log("Tree root:", root); // Debugging log
 
-    const height = 1200; // Increase the overall height
-    const margin = { top: 20, right: 90, bottom: 30, left: 90 };
+    const margin = { top: 50, right: 90, bottom: 30, left: 90 };
 
-    const svg = d3.select(svgRef.current).attr("height", height);
+    const svg = d3.select(svgRef.current);
 
     svg.selectAll("*").remove(); // Clear previous rendering
 
@@ -72,74 +71,90 @@ const GitTree: React.FC<{ branches: Branch[] }> = ({ branches }) => {
     svg
       .append("rect")
       .attr("width", "100%")
-      .attr("height", height)
-      .style("fill", "black"); // Set background to black
+      .attr("height", "100%")
+      .style("fill", "black");
 
-    const g = svg
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+    const g = svg.append("g");
 
-    const tree = d3.tree<TreeNode>().nodeSize([100, 400]); // Increase the minimum distance between nodes
+    const tree = d3.tree<TreeNode>().nodeSize([100, 400]);
 
     const hierarchy = d3.hierarchy(root);
     const treeData = tree(hierarchy);
     console.log("Tree data:", treeData); // Debugging log
 
+    // Calculate the dimensions of the tree
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+
+    treeData.each(d => {
+      minX = Math.min(minX, d.x);
+      maxX = Math.max(maxX, d.x);
+      maxY = Math.max(maxY, d.y);
+    });
+
+    const height = maxX - minX + margin.top + margin.bottom;
+    const width = maxY + margin.left + margin.right;
+
+    // Set the SVG dimensions
+    svg.attr("width", width).attr("height", height);
+
+    // Adjust the initial transformation
+    g.attr("transform", `translate(${margin.left},${-minX + margin.top})`);
+
+    // The rest of the code remains the same
     const link = g
-      .selectAll(".link")
+      .selectAll<SVGPathElement, d3.HierarchyLink<TreeNode>>(".link")
       .data(treeData.links())
       .enter()
       .append("path")
       .attr("class", "link")
       .attr(
         "d",
-        d3
-          .linkHorizontal<
-            d3.HierarchyPointLink<TreeNode>,
-            d3.HierarchyPointNode<TreeNode>
-          >()
+        d3.linkHorizontal<d3.HierarchyPointLink<TreeNode>, d3.HierarchyPointNode<TreeNode>>()
           .x((d) => d.y)
-          .y((d) => d.x),
+          .y((d) => d.x)
       )
       .style("fill", "none")
-      .style("stroke", (d) => d.source.data.color) // Use color from source node
+      .style("stroke", (d) => (d.source as any).data.color)
       .style("stroke-width", "2px");
 
     const node = g
-      .selectAll(".node")
+      .selectAll<SVGGElement, d3.HierarchyPointNode<TreeNode>>(".node")
       .data(treeData.descendants())
       .enter()
       .append("g")
       .attr(
         "class",
-        (d) => "node" + (d.children ? " node--internal" : " node--leaf"),
+        (d) => "node" + (d.children ? " node--internal" : " node--leaf")
       )
       .attr("transform", (d) => `translate(${d.y},${d.x})`);
 
     node
       .append("circle")
       .attr("r", 10)
-      .style("fill", (d) => d.data.color); // Use color from node data
+      .style("fill", (d) => d.data.color);
 
     node
       .append("text")
-      .attr("dy", (d) => (d.children ? -15 : 15)) // Position text above for internal nodes and below for leaf nodes
+      .attr("dy", (d) => (d.children ? -15 : 15))
       .attr("x", 0)
       .style("text-anchor", "middle")
-      .style("fill", "white") // Set text color to white
+      .style("fill", "white")
       .text((d) => `${d.data.id}: ${d.data.message}`);
-
-    // Adjust the width of the SVG based on the tree layout
-    const svgWidth =
-      treeData.leaves().reduce((max, leaf) => Math.max(max, leaf.y), 0) +
-      margin.left +
-      margin.right;
-    svg.attr("width", svgWidth);
   }, [branches]);
 
   return (
-    <div style={{ overflowX: "scroll", overflowY: "hidden", height: "100vh" }}>
-      <svg ref={svgRef}></svg>
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+        overflowX: "auto",
+        overflowY: "auto",
+        backgroundColor: "black",
+      }}
+    >
+      <svg ref={svgRef} style={{ display: "block" }}></svg>
     </div>
   );
 };
