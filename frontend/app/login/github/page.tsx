@@ -24,6 +24,13 @@ const PageContent = (props: Props) => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const [login, result] = useLoginMutation();
+  const [repositories, setRepositories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const extractRepositoryNames = (repos: any) => {
+    console.log("repo: ", repos);
+    return repos?.map((repo: any) => repo.name);
+  };
 
   useEffect(() => {
     if (code) {
@@ -36,8 +43,27 @@ const PageContent = (props: Props) => {
     if (!result.isUninitialized) {
       if (result.isSuccess && result.data.access_token) {
         setCookie("accessJwt", result.data.access_token);
+
+        //const {repos, isSuccess} = useGetUserRepositoriesQuery(result.data.access_token);
+
         console.log("cookies set", result.data.access_token);
-        router.push("/dashboard");
+        // get user repositories
+        axios
+          .post("http://localhost:5000/github/user/repositories", {
+            accessJwt: result.data.access_token,
+          })
+          .then((response) => {
+            setRepositories(response.data);
+            console.log("user repositories set: ", repositories);
+            dispatch(setRepoList(response.data));
+          })
+          .catch((error) => {
+            console.error("Error fetching repositories:", error);
+          })
+          .finally(() => {
+            setIsLoading(false);
+            router.push("/dashboard");
+          });
       } else {
         console.log("not result.isSuccess && result.data.access_token");
         console.log("result.isSuccess: ", result.isSuccess);
@@ -48,7 +74,19 @@ const PageContent = (props: Props) => {
 
   return (
     <div>
-      <p>Loading repositories...</p>
+      {isLoading ? (
+        <p>Loading repositories...</p>
+      ) : (
+        <ul>
+          {extractRepositoryNames(repositories).map(
+            (repo: any, index: number) => (
+              <li key={index}>
+                <button className="repo-button"> {repo} </button>
+              </li>
+            ),
+          )}
+        </ul>
+      )}
     </div>
   );
 };
