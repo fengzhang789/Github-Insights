@@ -22,7 +22,7 @@ const CommitHistoryView: React.FC<CommitHistoryViewProps> = ({
           setCommitSHA={setCommitSHA}
         />
       </div>
-      <div className="flex-1 basis-3/4 px-10 py-6">
+      <div className="flex-1 basis-3/4 px-10 py-6 max-w-[70svw]">
         <CommitHistoryContent SHA={commitSHA} repo={repo} owner={name} />
       </div>
     </div>

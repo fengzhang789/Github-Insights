@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CodeDemo from "@/public/CodeDemo.png";
 import Link from "next/link";
+import { GradientSection } from "./__components/GradientSection";
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -138,13 +139,20 @@ export default function Home() {
       </TestimonialsSection>
 
       <CTASection>
+      <GradientWrapper>
+        <GradientSection />
+      </GradientWrapper>
+      <ContentWrapper>
         <h2>Ready to Reimagine Your Commits?</h2>
         <p>
           Join thousands of developers who have transformed their workflow with
           GitInsights.
         </p>
-        <StyledButton>Start Your Free Trial</StyledButton>
-      </CTASection>
+        <Link href='/login'>
+          <StyledButton>Start Your Free Trial</StyledButton>
+        </Link>
+      </ContentWrapper>
+    </CTASection>
 
       <Footer>
         <FooterDiv>
@@ -308,17 +316,18 @@ const FeatureGrid = styled.div`
 `;
 
 const FeatureCard = styled.div`
+  position: relative;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   padding: 30px;
   border-radius: 8px;
+  z-index: 0;
   min-height: 16rem;
-  z-index: -1;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid transparent;
+  border-image: linear-gradient(45deg, #3498db, #8e44ad, #ff69b4);
+  border-image-slice: 1;
 
   &:hover {
     transform: translateY(-5px);
@@ -340,6 +349,7 @@ const FeatureCard = styled.div`
     min-height: auto;
   }
 `;
+
 
 // How It Works Section
 const HowItWorksSection = styled.section`
@@ -371,9 +381,8 @@ const Step = styled.div`
   text-align: center;
   padding: 20px;
   border-radius: 10px;
-  z-index: -1;
   background: linear-gradient(to top, #000000, #242424);
-
+  
   backdrop-filter: blur(5px);
   transition: transform 0.3s ease;
 
@@ -482,15 +491,7 @@ const CTASection = styled.section`
   color: white;
   text-align: center;
   overflow: hidden;
-  background: linear-gradient(
-    to top right,
-    #000000 0%,
-    #242424 20%,
-    #3d3d3d 40%,
-    #3d3d3d 60%,
-    #242424 80%,
-    #000000 100%
-  );
+  height: 70vh; // Adjust this as needed
 
   h2 {
     font-size: 3rem;
@@ -506,6 +507,20 @@ const CTASection = styled.section`
     position: relative;
     z-index: 1;
   }
+`;
+
+const GradientWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+`;
+
+const ContentWrapper = styled.div`
+  position: relative;
+  z-index: 1;
 `;
 
 // Footer

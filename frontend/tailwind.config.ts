@@ -1,4 +1,7 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
+import type { PluginUtils } from "tailwindcss/types/config";
+
+const plugin = require('tailwindcss/plugin')
 
 const config = {
   darkMode: ["class"],
@@ -7,7 +10,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -74,7 +77,34 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function({ addUtilities }: any) {
+      addUtilities({
+        '.scrollbar-thin::-webkit-scrollbar': {
+          width: '8px',
+        },
+        '.scrollbar-thin::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '.scrollbar-thin::-webkit-scrollbar-thumb': {
+          background: 'white',
+          borderRadius: '4px',
+        },
+        '.scrollbar-thin': {
+          scrollbarWidth: 'thin', // Firefox
+          scrollbarColor: 'white transparent', // Firefox
+        },
+        '.truncate-multiline': {
+          display: '-webkit-box',
+          WebkitLineClamp: '2',
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        },
+      }, ['responsive']);
+    }),
+  ],
+} satisfies Config;
 
-export default config
+export default config;
