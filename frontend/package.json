@@ -35,7 +35,6 @@
     "styled-components": "^6.1.12",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.167.1",
     "three.js": "^0.77.1"
   },
   "devDependencies": {
