@@ -209,19 +209,28 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
                 'accept': 'application/vnd.github.diff'
             }
         });
+        console.log("req.body.repo: ", req.body.repo);
         const repo = yield prisma.repo.findUnique({
             where: {
                 repoName: req.body.repo,
             }
         });
+        if (repo) {
+            console.log("Repo found:", req.body.repo);
+        }
+        else {
+            console.log("No repo exists with the name:", req.body.repo);
+        }
         const possibleTags = repo ? repo.tags : [];
-        const possibleTagsString = possibleTags.map((tag) => { `, ${tag}`; }).join('');
+        console.log(possibleTags);
+        // const possibleTagsString = possibleTags.map((tag: any) => {`, ${tag}`}).join('');
+        // console.log("possibleTagsString:", possibleTagsString)
+        const tags = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Which out of the following tags are the most appropriate tags for this commit? 
+      The possible tags: documentation, new feature, bug fix, refactor, optimization${possibleTags}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
+      Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
         // const giveContext = await 
         const commitAnalysis = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
         const recommendedCommitMessage = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`);
-        const tags = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Which out of the following tags are the most appropriate tags for this commit? 
-      The possible tags: documentation, new feature, bug fix, refactor, optimization${possibleTagsString}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
-      Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
         const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
             const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
             return Object.assign(Object.assign({}, file), { analysis: {
@@ -314,9 +323,7 @@ export const handlePostTags = (req, res) => __awaiter(void 0, void 0, void 0, fu
                     repoName: repoName,
                 },
                 data: {
-                    tags: {
-                        push: tag,
-                    },
+                    tags: repo.tags + `, ${tag}`,
                 },
             });
         }
@@ -325,9 +332,10 @@ export const handlePostTags = (req, res) => __awaiter(void 0, void 0, void 0, fu
             yield prisma.repo.create({
                 data: {
                     repoName: repoName,
-                    tags: [tag],
+                    tags: tag,
                 },
             });
+            console.log("New repo created with name:", repoName);
         }
         console.log("Tag " + tag + " added successfully");
         res.status(200).send("Tag added successfully");

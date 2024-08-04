@@ -31,17 +31,17 @@ const AddTagBar: React.FC<AddTagBarProps> = ({repo}) => {
   if (!repo) return null;
   
   return (
-    <div className="flex items-center">
+    <div className="flex items-center mb-[2rem]">
       <input
         type="text"
         value={tagName}
         onChange={handleInputChange}
         placeholder="Enter new tag name"
-        className="border p-2 flex-grow"
+        className="border p-2 flex-grow rounded-md"
       />
       <button
         onClick={handleAddTag}
-        className="bg-blue-500 text-white p-2 ml-2"
+        className="bg-blue-500 text-white p-2 ml-2 rounded-2xl"
       >
         Add Tag
       </button>

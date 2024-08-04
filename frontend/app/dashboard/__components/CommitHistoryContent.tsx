@@ -10,6 +10,8 @@ import {
   File, 
   FileSummary
 } from "@/app/__typings/localtypes";
+import CircularProgress from '@mui/material/CircularProgress';
+
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
 
 
@@ -23,6 +25,7 @@ const CommitHistoryContent = ({
   const [currentFile, setCurrentFile] = useState<FileSummary | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const getCommitInfo = () => {
     if (owner && repo && SHA) {
@@ -53,9 +56,11 @@ const CommitHistoryContent = ({
         .then((response) => {
           setCommitSummary(response.data);
           console.log("get commit summary data: ", response);
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching commit summary:", error);
+          setIsLoading(false);
         });
     }
   };
@@ -77,6 +82,7 @@ const CommitHistoryContent = ({
 
   useEffect(() => {
     console.log("update SHA");
+    setIsLoading(true)
     getCommitInfo();
     getCommitSummary();
   }, [SHA]);
@@ -88,12 +94,16 @@ const CommitHistoryContent = ({
 
   return (
     <>
-      {commitSummary ? (
+      {commitSummary && !isLoading ? (
         <>
           <div className="flex justify-between items-center mb-4 max-w-[70svw]">
-            <h1 className="text-4xl font-bold">Commit Summary: {commitSummary.recommendedCommitMessage}</h1>
+            <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
           </div>
           <div className="flex space-x-2 mb-4">
+            <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
+            <p className="text-gray-600">Branch: Main</p>
+          </div>
+          <div className="flex space-x-2 mb-[1rem]">
             {commitSummary.tags.split('///').map((tag, index) => (
               <Tag text={tag} key={index}/>
             ))}
@@ -136,7 +146,12 @@ const CommitHistoryContent = ({
         </>
       ) : (
         <div className="flex justify-center items-center h-full">
+          {isLoading &&
+            <CircularProgress color="primary"></CircularProgress>
+          }
+          {!isLoading && 
           <p className="text-center">Choose a commit</p>
+          }
         </div>
       )}
     </>
