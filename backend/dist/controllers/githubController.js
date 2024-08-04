@@ -197,7 +197,7 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
             }
         });
         const commitAnalysis = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
-        const recommendedCommitMessage = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message.`);
+        const recommendedCommitMessage = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`);
         const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
             const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
             return Object.assign(Object.assign({}, file), { analysis: {

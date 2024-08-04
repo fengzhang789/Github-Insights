@@ -12,6 +12,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { TUserRepository } from "../__typings/api";
 import { current } from "@reduxjs/toolkit";
+import { setRepoList } from "../__store/repoSlice";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -39,11 +40,27 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    getUserRepos();
     console.log(repos);
   }, []);
+  
   const handleSelect = (e: any) => {
     setSelectedRepo(e.target.value);
   };
+
+  const getUserRepos = () => {
+    axios.post("http://localhost:5000/github/user/repositories", {
+      accessJwt: cookies.accessJwt,
+    })
+      .then((response) => {
+        dispatch(setRepoList(response.data));
+        console.log("fetched repo list")
+      })
+      .catch((error) => {
+        console.error("Error fetching repositories:", error);
+      })
+  }
+
 
   const getRepoInfo = () => {
     console.log("abc123");
