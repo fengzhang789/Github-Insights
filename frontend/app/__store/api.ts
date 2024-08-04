@@ -44,7 +44,7 @@ const axiosBaseQuery =
 
 const AppApi = createApi({
   baseQuery: axiosBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000",
+    baseUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000",
   }),
   tagTypes: [
     
@@ -78,10 +78,10 @@ const AppApi = createApi({
         data: requestBody,
       }),
     }),
-    getUserRepositories: builder.query<TUserRepository, {accessJwt: string}>({
+    getUserRepositories: builder.query<TUserRepository[], {accessJwt: string}>({
       query: (requestBody) => ({
-        url: "/github/user/repos",
-        method: "GET",
+        url: "/github/user/repositories",
+        method: "POST",
         data: requestBody,
       }),
     }),
