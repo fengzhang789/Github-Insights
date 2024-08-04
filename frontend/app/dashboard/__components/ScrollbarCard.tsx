@@ -34,7 +34,7 @@ export default function ScrollbarCard({
           </div>
         </CardHeader>
         
-        <CardFooter className="text-sm text-gray-500">
+        <CardFooter className="text-sm text-gray-500 break-all">
           Date: {commit.date} <br/>
           SHA: {commit.sha}
         </CardFooter>
