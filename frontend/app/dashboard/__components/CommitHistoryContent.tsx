@@ -5,7 +5,9 @@ import axios from "axios";
 import {
   CommitHistoryContentProps,
   ShaCommit,
-  File
+  ShaCommitSummary,
+  File, 
+  FileSummary
 } from "@/app/__typings/localtypes";
 
 const CommitHistoryContent = ({
@@ -14,7 +16,8 @@ const CommitHistoryContent = ({
   repo,
 }: CommitHistoryContentProps) => {
   const [commit, setCommit] = useState<ShaCommit | null>(null);
-  const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const [commitSummary, setCommitSummary] = useState<ShaCommitSummary | null>(null);
+  const [currentFile, setCurrentFile] = useState<FileSummary | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
 
@@ -36,6 +39,24 @@ const CommitHistoryContent = ({
     }
   };
 
+  const getCommitSummary = () => {
+    if (owner && repo && SHA) {
+      axios
+        .post(`http://localhost:5000/github/repository/commit/${SHA}/analysis`, {
+          accessJwt: cookies.accessJwt,
+          owner: owner,
+          repo: repo,
+        })
+        .then((response) => {
+          setCommitSummary(response.data);
+          console.log("get commit summary data: ", response);
+        })
+        .catch((error) => {
+          console.error("Error fetching commit summary:", error);
+        });
+    }
+  };
+
   const getFileContent = () => {
     if (commit && currentFile) {
       console.log("currentFile.raw_url", currentFile.raw_url)
@@ -52,6 +73,7 @@ const CommitHistoryContent = ({
   useEffect(() => {
     console.log("update SHA");
     getCommitInfo();
+    getCommitSummary();
   }, [SHA]);
 
   useEffect(() => {
@@ -61,7 +83,7 @@ const CommitHistoryContent = ({
 
   return (
     <>
-      {commit ? (
+      {commitSummary ? (
         <>
           <div className="flex justify-between items-center mb-4 max-w-[70svw]">
             <h1 className="text-4xl font-bold">Commit Summary</h1>
@@ -69,8 +91,7 @@ const CommitHistoryContent = ({
           </div>
           <div className="text-lg mb-[3rem]">
             <p>
-              Summary~~~~~
-              asjdfl;sajdfksajdf;asjdfl;kjasld;fja;lskdjf;laskdjfl;kasjdf;alsjkdf;askdjf;lasjdf;sdf
+              {commitSummary?.entireCommitAnalysis}
             </p>
           </div>
           <div className="mb-4">
@@ -78,7 +99,7 @@ const CommitHistoryContent = ({
           </div>
           <div className="">
             <div className="flex space-x-4 mb-[3rem] overflow-x-auto scrollbar-thin">
-              {commit.files.map((file) => (
+              {commitSummary.files.map((file) => (
                 <button key={file.sha} onClick={() => {
                   console.log("commit history file changed")
                   setCurrentFile(file)
@@ -87,7 +108,7 @@ const CommitHistoryContent = ({
                     key={file.sha}
                     title={file.filename}
                     subtitle={`+${file.additions} -${file.deletions}`}
-                    body={file.raw_url}
+                    body={file.analysis.analysis}
                   />
                 </button>
               ))}
