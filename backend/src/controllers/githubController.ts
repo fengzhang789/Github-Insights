@@ -15,12 +15,6 @@ export const handleGetAppInformationRequest = async (req: Request, res: Response
       auth: generateJWT()
     })
   
-    const installationInfo = await octokit.request('GET /users/fengzhang789/installation', {
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28'
-      }
-    })
-  
     const response = await octokit.request('GET /app', {
       headers: {
         'X-GitHub-Api-Version': '2022-11-28'
@@ -69,10 +63,10 @@ export const handleGetAppUserInstallations = async (req: Request, res: Response)
   }
 }
 
-export const handleGetAppUserRepositories = async (req: Request, res: Response) => {
+export const handleGetAppUserRepositories = async (req: Request<{ accessJwt: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
-      auth: generateJWT()
+      auth: req.body.accessJwt
     })
 
     const response = await octokit.request(`GET /users/${req.body.username}/repos`, {
@@ -215,6 +209,7 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
       }
     });
 
+    // const giveContext = await 
     const commitAnalysis = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
     const recommendedCommitMessage = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`); 
 
@@ -276,6 +271,26 @@ export const handleGetRepositoryCommitDiff = async (req: Request<{ owner: string
       headers: {
         'X-GitHub-Api-Version': '2022-11-28',
         'accept': 'application/vnd.github.diff'
+      }
+    })
+
+    res.status(200).send(response.data)
+  } catch (error: any) {
+    res.status(500).send(error.message)
+  }
+}
+
+export const handleGetRepositoryBranches = async (req: Request<{ owner: string, repo: string, accessJwt: string }>, res: Response) => {
+  try {
+    const octokit = new Octokit({
+      auth: req.body.accessJwt
+    })
+
+    const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/branches`, {
+      owner: req.body.owner,
+      repo: req.body.repo,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
       }
     })
 
