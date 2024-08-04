@@ -19,7 +19,7 @@ services:
     container_name: ollama_backend
     volumes:
       - ollama:/root/.ollama
-    entrypoint: ["/usr/bin/bash", "ollama-build-llama3.1.sh"]
+    # entrypoint: ["/usr/bin/bash", "ollama-build-llama3.1.sh"]
 
 volumes:
   ollama: 

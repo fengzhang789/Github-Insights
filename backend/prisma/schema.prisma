@@ -24,6 +24,7 @@ model Commit {
   files                    File[]
   entireCommitAnalysis     String   @default("")
   recommendedCommitMessage String   @default("")
+  tags                     String   @default("")
 }
 
 model File {

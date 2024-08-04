@@ -125,16 +125,17 @@ export const handleLoginGithub = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 export const handleGetRepositoryCommits = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const octokit = new Octokit({
             auth: req.body.accessJwt
         });
-        const initialResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+        const initialResponse = yield octokit.paginate(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${(_a = req.body.sha) !== null && _a !== void 0 ? _a : ""}`, {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.status(200).send(initialResponse.data);
+        res.status(200).send(initialResponse);
     }
     catch (error) {
         console.log(error);
@@ -151,7 +152,24 @@ export const handleGetRepositoryCommit = (req, res) => __awaiter(void 0, void 0,
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.status(200).send(response.data);
+        const modifiedResponse = Object.assign(Object.assign({}, response.data), { files: response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
+                const textData = yield axios.get(file.raw_url);
+                return {
+                    sha: file.sha,
+                    status: file.status,
+                    filename: file.filename,
+                    additions: file.additions,
+                    deletions: file.deletions,
+                    changes: file.changes,
+                    blob_url: file.blob_url,
+                    raw_url: file.raw_url,
+                    contents_url: file.contents_url,
+                    patch: file.patch,
+                    fileTextContent: textData
+                };
+            })) });
+        yield Promise.all(modifiedResponse.files);
+        res.status(200).send(modifiedResponse);
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -194,6 +212,9 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
         // const giveContext = await 
         const commitAnalysis = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
         const recommendedCommitMessage = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`);
+        const tags = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Which out of the following tags are the most appropriate tags for this commit? 
+      The possible tags: documentation, new feature, bug fix, refactor, optimization, ${req.body.tags}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
+      Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
         const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
             const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
             return Object.assign(Object.assign({}, file), { analysis: {
@@ -210,6 +231,7 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
                 sha: response.data.sha,
                 entireCommitAnalysis: commitAnalysis.response,
                 recommendedCommitMessage: recommendedCommitMessage.response,
+                tags: tags.response,
                 message: response.data.commit.message,
                 date: response.data.commit.committer.date,
                 total: response.data.stats.total,

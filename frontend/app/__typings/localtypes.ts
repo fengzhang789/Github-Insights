@@ -38,6 +38,39 @@ export type ShaCommit = {
   files: File[];
 };
 
+export type ShaCommitSummary = {
+  id: string
+  sha: string;
+  message: string;
+  date: Date;
+  total: number;
+  additions: number;
+  deletions: number;
+  entireCommitAnalysis: string;
+  recommendedCommitMessage: string;
+  tags: string;
+  files: FileSummary[];
+};
+
+export type FileSummary = {
+  id: string;
+  sha: string;
+  filename: string;
+  status: string;
+  additions: number;
+  deletions: number;
+  raw_url: string;
+  commitId: string;
+  analysisId: string;
+  analysis: Analysis;
+}
+
+export type Analysis = {
+  id: string;
+  analysis: string;
+  createdOn: Date;
+}
+
 export type File = {
   sha: string;
   filename: string;
