@@ -14,14 +14,16 @@ datasource db {
 }
 
 model Commit {
-  id        String   @id @default(cuid())
-  sha       String   @unique
-  message   String
-  date      DateTime
-  total     Int
-  additions Int
-  deletions Int
-  files     File[]
+  id                       String   @id @default(cuid())
+  sha                      String   @unique
+  message                  String
+  date                     DateTime
+  total                    Int
+  additions                Int
+  deletions                Int
+  files                    File[]
+  entireCommitAnalysis     String   @default("")
+  recommendedCommitMessage String   @default("")
 }
 
 model File {

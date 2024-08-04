@@ -183,39 +183,40 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
       auth: req.body.accessJwt
     });
 
-    // try {
-    //   const commitAnalysis = await prisma.commit.findFirstOrThrow({
-    //     where: {
-    //       sha: req.params.ref
-    //     },
-    //     include: {
-    //       files: {
-    //         include: {
-    //           analysis: true
-    //         }
-    //       }
-    //     }
-    //   });
+    try {
+      const commitAnalysis = await prisma.commit.findFirstOrThrow({
+        where: {
+          sha: req.params.ref
+        },
+        include: {
+          files: {
+            include: {
+              analysis: true
+            }
+          }
+        }
+      });
 
-    //   return res.status(200).send(commitAnalysis);
-    // } catch {
-    //   console.log("No commit found, creating a new one");
-    // }
+      return res.status(200).send(commitAnalysis);
+    } catch {
+      console.log("No commit found, creating a new one");
+    }
 
-    // Fetch commit details from GitHub
     const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
       headers: {
         'X-GitHub-Api-Version': '2022-11-28'
       }
     });
 
-    // Fetch diff details from GitHub
     const diffResponse = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
       headers: {
         'X-GitHub-Api-Version': '2022-11-28',
         'accept': 'application/vnd.github.diff'
       }
     });
+
+    const commitAnalysis = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
+    const recommendedCommitMessage = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`); 
 
     const fileAnalysisPromises = response.data.files.map(async (file: any) => {
       const fileAnalysis = await llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
@@ -237,6 +238,8 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
     const commit = await prisma.commit.create({
       data: {
         sha: response.data.sha,
+        entireCommitAnalysis: commitAnalysis.response,
+        recommendedCommitMessage: recommendedCommitMessage.response,
         message: response.data.commit.message,
         date: response.data.commit.committer.date,
         total: response.data.stats.total,

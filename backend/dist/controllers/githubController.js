@@ -167,38 +167,39 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
         const octokit = new Octokit({
             auth: req.body.accessJwt
         });
-        // try {
-        //   const commitAnalysis = await prisma.commit.findFirstOrThrow({
-        //     where: {
-        //       sha: req.params.ref
-        //     },
-        //     include: {
-        //       files: {
-        //         include: {
-        //           analysis: true
-        //         }
-        //       }
-        //     }
-        //   });
-        //   return res.status(200).send(commitAnalysis);
-        // } catch {
-        //   console.log("No commit found, creating a new one");
-        // }
-        // Fetch commit details from GitHub
+        try {
+            const commitAnalysis = yield prisma.commit.findFirstOrThrow({
+                where: {
+                    sha: req.params.ref
+                },
+                include: {
+                    files: {
+                        include: {
+                            analysis: true
+                        }
+                    }
+                }
+            });
+            return res.status(200).send(commitAnalysis);
+        }
+        catch (_a) {
+            console.log("No commit found, creating a new one");
+        }
         const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        // Fetch diff details from GitHub
         const diffResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28',
                 'accept': 'application/vnd.github.diff'
             }
         });
+        const commitAnalysis = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
+        const recommendedCommitMessage = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message.`);
         const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
-            const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with backslash n, just one long string. \n${diffResponse.data}`);
+            const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
             return Object.assign(Object.assign({}, file), { analysis: {
                     create: {
                         analysis: fileAnalysis.response,
@@ -211,6 +212,8 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
         const commit = yield prisma.commit.create({
             data: {
                 sha: response.data.sha,
+                entireCommitAnalysis: commitAnalysis.response,
+                recommendedCommitMessage: recommendedCommitMessage.response,
                 message: response.data.commit.message,
                 date: response.data.commit.committer.date,
                 total: response.data.stats.total,
