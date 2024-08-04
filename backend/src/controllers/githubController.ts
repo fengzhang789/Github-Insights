@@ -238,7 +238,7 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
       }
     });
     const possibleTags = repo ? repo.tags : [];
-    const possibleTagsString = possibleTags.map((tag) => {`, ${tag}`}).join('');
+    const possibleTagsString = possibleTags.map((tag: any) => {`, ${tag}`}).join('');
 
     // const giveContext = await 
     const commitAnalysis = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
@@ -249,13 +249,13 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
       Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
 
     const fileAnalysisPromises = response.data.files.map(async (file: any) => {
-      const fileAnalysis = await llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
+      const fileAnalysis = await llamaGenerate(`This is the diff log for a commit. Analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
 
       return {
         ...file,
         analysis: {
           create: {
-            analysis: fileAnalysis.response,
+            analysis: fileAnalysis,
           }
         }
       };
@@ -268,9 +268,9 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
     const commit = await prisma.commit.create({
       data: {
         sha: response.data.sha,
-        entireCommitAnalysis: commitAnalysis.response,
-        recommendedCommitMessage: recommendedCommitMessage.response,
-        tags: tags.response,
+        entireCommitAnalysis: commitAnalysis ?? "",
+        recommendedCommitMessage: recommendedCommitMessage ?? "",
+        tags: tags ?? "",
         message: response.data.commit.message,
         date: response.data.commit.committer.date,
         total: response.data.stats.total,

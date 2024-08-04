@@ -8,13 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import axios from "axios";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+dotenv.config();
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const llamaGenerate = (prompt) => __awaiter(void 0, void 0, void 0, function* () {
-    const URL = process.env.OLLAMA_API_URL + "/generate";
-    return (yield axios.post(URL, {
-        model: "llama3",
-        prompt: prompt,
-        stream: false
-    })).data;
+    const response = yield openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+            { role: "system", content: "You are outputting analysis to be put onto a website analyzing git commits and git diffs. You generally want to keep these code and format free. Just output the sentence if possible." },
+            { role: "user", content: prompt },
+        ],
+        max_tokens: 1024,
+        temperature: 0.2,
+    });
+    return response.choices[0].message.content;
 });
 const llamaChat = (messages) => __awaiter(void 0, void 0, void 0, function* () {
     const URL = process.env.OLLAMA_API_URL + "/chat";

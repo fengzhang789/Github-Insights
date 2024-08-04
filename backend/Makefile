@@ -9,3 +9,7 @@ start:
 stop:
 	docker-compose down
 
+reset:
+	npx prisma migrate reset
+	docker-compose down
+	

@@ -14,10 +14,10 @@ datasource db {
 }
 
 model Repo {
-  id                       String   @id @default(cuid())
-  repoName  String @unique
+  id       String   @id @default(cuid())
+  repoName String   @unique
   commits  Commit[]
-  tags String[]
+  tags     String[]
 }
 
 model Commit {
@@ -32,8 +32,8 @@ model Commit {
   entireCommitAnalysis     String   @default("")
   recommendedCommitMessage String   @default("")
   tags                     String   @default("")
-  repo Repo? @relation(fields: [repoId], references: [id])
-  repoId  String?
+  repo                     Repo?    @relation(fields: [repoId], references: [id])
+  repoId                   String?
 }
 
 model File {

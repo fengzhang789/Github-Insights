@@ -13,7 +13,7 @@ services:
       - PGADMIN_DEFAULT_EMAIL=gitinsight@gmail.com
       - PGADMIN_DEFAULT_PASSWORD=samplepassword123
   ollama:
-    build: ollama
+    image: ollama/ollama
     ports: 
       - 127.0.0.1:11434:11434
     container_name: ollama_backend

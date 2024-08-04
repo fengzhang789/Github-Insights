@@ -20,6 +20,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "octokit": "^4.0.2",
+    "openai": "^4.54.0",
     "query-string": "^9.1.0"
   },
   "devDependencies": {
