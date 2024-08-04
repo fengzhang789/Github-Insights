@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleGetAppInformationRequest, handleGetAppInstallations, handleGetAppRepositoryInformation, handleGetCommitAnalysis, handleGetRepositoryCommit, handleGetRepositoryCommitDiff, handleGetRepositoryCommits, handleGetUserRepositories, handleLoginGithub } from "../controllers/githubController.js";
+import { handleGetAppInformationRequest, handleGetAppInstallations, handleGetAppRepositoryInformation, handleGetCommitAnalysis, handleGetRepositoryBranches, handleGetRepositoryCommit, handleGetRepositoryCommitDiff, handleGetRepositoryCommits, handleGetUserRepositories, handleLoginGithub } from "../controllers/githubController.js";
 export const router = Router();
 router.get('/app', handleGetAppInformationRequest);
 router.get('/app/repositories/all', handleGetAppRepositoryInformation);
@@ -10,3 +10,4 @@ router.post('/repository/commits', handleGetRepositoryCommits); // gets the all 
 router.post('/repository/commit/:ref', handleGetRepositoryCommit); // gets a specific commit of a repository
 router.post('/repository/commit/:ref/diff', handleGetRepositoryCommitDiff); // gets the git diff of a repository
 router.post('/repository/commit/:ref/analysis', handleGetCommitAnalysis);
+router.post('/repository/branches', handleGetRepositoryBranches);

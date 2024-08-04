@@ -19,11 +19,6 @@ export const handleGetAppInformationRequest = (req, res) => __awaiter(void 0, vo
         const octokit = new Octokit({
             auth: generateJWT()
         });
-        const installationInfo = yield octokit.request('GET /users/fengzhang789/installation', {
-            headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-            }
-        });
         const response = yield octokit.request('GET /app', {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
@@ -70,7 +65,7 @@ export const handleGetAppUserInstallations = (req, res) => __awaiter(void 0, voi
 export const handleGetAppUserRepositories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const octokit = new Octokit({
-            auth: generateJWT()
+            auth: req.body.accessJwt
         });
         const response = yield octokit.request(`GET /users/${req.body.username}/repos`, {
             headers: {
@@ -196,6 +191,7 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
                 'accept': 'application/vnd.github.diff'
             }
         });
+        // const giveContext = await 
         const commitAnalysis = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
         const recommendedCommitMessage = yield llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`);
         const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
@@ -247,6 +243,24 @@ export const handleGetRepositoryCommitDiff = (req, res) => __awaiter(void 0, voi
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28',
                 'accept': 'application/vnd.github.diff'
+            }
+        });
+        res.status(200).send(response.data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+export const handleGetRepositoryBranches = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const octokit = new Octokit({
+            auth: req.body.accessJwt
+        });
+        const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/branches`, {
+            owner: req.body.owner,
+            repo: req.body.repo,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
             }
         });
         res.status(200).send(response.data);
