@@ -17,7 +17,7 @@ model Repo {
   id       String   @id @default(cuid())
   repoName String   @unique
   commits  Commit[]
-  tags     String[]
+  tags     String
 }
 
 model Commit {
