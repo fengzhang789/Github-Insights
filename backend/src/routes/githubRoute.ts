@@ -12,4 +12,4 @@ router.post('/repository/commits', handleGetRepositoryCommits);     // gets the 
 router.post('/repository/commit/:ref', handleGetRepositoryCommit);       // gets a specific commit of a repository
 router.post('/repository/commit/:ref/diff', handleGetRepositoryCommitDiff);     // gets the git diff of a repository
 router.post('/repository/commit/:ref/analysis', handleGetCommitAnalysis);
-router.post('/repository/branches', handleGetRepositoryBranches);
+router.post('/repository/branches', handleGetRepositoryBranches)
