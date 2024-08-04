@@ -3,27 +3,34 @@ import { App, Octokit } from "octokit";
 import generateJWT from "../utils/generateJWT.js";
 import axios from "axios";
 import queryString from "query-string";
+import { TCommitInfo } from "../typings/commit.js";
+import { PrismaClient } from "@prisma/client";
+import { llamaGenerate } from "../utils/ollamaPrompt.js";
+
+const prisma = new PrismaClient();
 
 export const handleGetAppInformationRequest = async (req: Request, res: Response) => {
-  const octokit = new Octokit({
-    auth: generateJWT()
-  })
-
-  const installationInfo = await octokit.request('GET /users/fengzhang789/installation', {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
-
-  installationInfo.data.INSTALLATION_ID
-
-  const response = await octokit.request('GET /app', {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
-
-  res.send(response.data)
+  try {
+    const octokit = new Octokit({
+      auth: generateJWT()
+    })
+  
+    const installationInfo = await octokit.request('GET /users/fengzhang789/installation', {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+  
+    const response = await octokit.request('GET /app', {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+  
+    res.status(200).send(response.data)
+  } catch (error: any) {
+    res.status(500).send(error.message)
+  }
 }
 
 export const handleGetAppInstallations = async (req: Request, res: Response) => {
@@ -38,38 +45,46 @@ export const handleGetAppInstallations = async (req: Request, res: Response) => 
       }
     })
   
-    res.send(response.data)
+    res.status(200).send(response.data)
   } catch (error: any) {
-    res.send(error.message)
+    res.status(500).send(error.message)
   }
 }
 
 export const handleGetAppUserInstallations = async (req: Request, res: Response) => {
-  const octokit = new Octokit({
-    auth: generateJWT()
-  })
-
-  const response = await octokit.request(`GET /users/${req.body.username}/installation`, {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
-
-  res.send(response.data)
+  try {
+    const octokit = new Octokit({
+      auth: generateJWT()
+    })
+  
+    const response = await octokit.request('GET /user/installations', {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+  
+    res.status(200).send(response.data)
+  } catch (error: any) {
+    res.status(500).send(error.message)
+  }
 }
 
 export const handleGetAppUserRepositories = async (req: Request, res: Response) => {
-  const octokit = new Octokit({
-    auth: generateJWT()
-  })
+  try {
+    const octokit = new Octokit({
+      auth: generateJWT()
+    })
 
-  const response = await octokit.request(`GET /users/${req.body.username}/repos`, {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
+    const response = await octokit.request(`GET /users/${req.body.username}/repos`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
 
-  res.send(response.data)
+    res.status(200).send(response.data)
+  } catch (error: any) {
+    res.status(500).send(error.message)
+  }
 }
 
 export const handleGetAppRepositoryInformation = async (req: Request, res: Response) => {
@@ -84,9 +99,9 @@ export const handleGetAppRepositoryInformation = async (req: Request, res: Respo
       }
     })
     
-    res.send(response.data)
+    res.status(200).send(response.data)
   } catch (error: any) {
-    res.send(error.message)
+    res.status(500).send(error.message)
   }
 }
 
@@ -104,10 +119,10 @@ export const handleGetUserRepositories = async (req: Request<{ accessJwt: string
 
     console.log(response.data)
   
-    res.send(response.data)
+    res.status(200).send(response.data)
   } catch (error: any) {
     console.log(error.message)
-    res.send(error.message)
+    res.status(500).send(error.message)
   }
 }
 
@@ -118,7 +133,6 @@ export const handleLoginGithub = async (req: Request<{ code: string }>, res: Res
     const parsed = queryString.parse(response.data)
 
     console.log(parsed)
-
     res.status(200).send(parsed)
   } catch (error: any) {
     console.log(error.message)
@@ -126,25 +140,26 @@ export const handleLoginGithub = async (req: Request<{ code: string }>, res: Res
   }
 }
 
-export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string }>, res: Response) => {
+export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string }>, res: Response<TCommitInfo>) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
     })
 
-    const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+    const initialResponse = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
       headers: {
         'X-GitHub-Api-Version': '2022-11-28'
       }
     })
 
-    res.send(response.data)
+    res.status(200).send(initialResponse.data)
   } catch (error: any) {
-    res.send(error.message)
+    console.log(error)
+    res.status(500).send(error.message)
   }
 }
 
-export const handleGetRepositoryCommit = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
+export const handleGetRepositoryCommit = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response<TCommitInfo>) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
@@ -156,11 +171,100 @@ export const handleGetRepositoryCommit = async (req: Request<{ owner: string, re
       }
     })
 
-    res.send(response.data)
+    res.status(200).send(response.data)
   } catch (error: any) {
-    res.send(error.message)
+    res.status(500).send(error.message)
   }
 }
+
+export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
+  try {
+    const octokit = new Octokit({
+      auth: req.body.accessJwt
+    });
+
+    try {
+      const commitAnalysis = await prisma.commit.findFirstOrThrow({
+        where: {
+          sha: req.params.ref
+        },
+        include: {
+          files: {
+            include: {
+              analysis: true
+            }
+          }
+        }
+      });
+
+      return res.status(200).send(commitAnalysis);
+    } catch {
+      console.log("No commit found, creating a new one");
+    }
+
+    const response = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    });
+
+    const diffResponse = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+        'accept': 'application/vnd.github.diff'
+      }
+    });
+
+    const commitAnalysis = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
+    const recommendedCommitMessage = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`); 
+
+    const fileAnalysisPromises = response.data.files.map(async (file: any) => {
+      const fileAnalysis = await llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
+
+      return {
+        ...file,
+        analysis: {
+          create: {
+            analysis: fileAnalysis.response,
+          }
+        }
+      };
+    });
+
+    // Wait for all file analyses to complete
+    const fileData = await Promise.all(fileAnalysisPromises);
+
+    // Create commit with analyzed files
+    const commit = await prisma.commit.create({
+      data: {
+        sha: response.data.sha,
+        entireCommitAnalysis: commitAnalysis.response,
+        recommendedCommitMessage: recommendedCommitMessage.response,
+        message: response.data.commit.message,
+        date: response.data.commit.committer.date,
+        total: response.data.stats.total,
+        additions: response.data.stats.additions,
+        deletions: response.data.stats.deletions,
+        files: {
+          create: fileData
+        }
+      },
+      include: {
+        files: {
+          include: {
+            analysis: true
+          }
+        }
+      }
+    });
+
+    res.status(200).send(commit);
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+}
+
 
 export const handleGetRepositoryCommitDiff = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
   try {
@@ -175,8 +279,8 @@ export const handleGetRepositoryCommitDiff = async (req: Request<{ owner: string
       }
     })
 
-    res.send(response.data)
+    res.status(200).send(response.data)
   } catch (error: any) {
-    res.send(error.message)
+    res.status(500).send(error.message)
   }
 }

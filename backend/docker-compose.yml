@@ -5,3 +5,21 @@ services:
       - 127.0.0.1:5432:5432
     environment:
       - POSTGRES_PASSWORD=ultimatesecretpassword
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 127.0.0.1:223:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=gitinsight@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=samplepassword123
+  ollama:
+    build: ollama
+    ports: 
+      - 127.0.0.1:11434:11434
+    container_name: ollama_backend
+    volumes:
+      - ollama:/root/.ollama
+    entrypoint: ["/usr/bin/bash", "ollama-build-llama3.1.sh"]
+
+volumes:
+  ollama: 

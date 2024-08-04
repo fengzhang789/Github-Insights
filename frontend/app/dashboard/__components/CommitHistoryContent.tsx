@@ -5,6 +5,7 @@ import axios from "axios";
 import {
   CommitHistoryContentProps,
   ShaCommit,
+  File
 } from "@/app/__typings/localtypes";
 
 const CommitHistoryContent = ({
@@ -13,6 +14,8 @@ const CommitHistoryContent = ({
   repo,
 }: CommitHistoryContentProps) => {
   const [commit, setCommit] = useState<ShaCommit | null>(null);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const [fileContent, setFileContent] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
 
   const getCommitInfo = () => {
@@ -33,10 +36,28 @@ const CommitHistoryContent = ({
     }
   };
 
+  const getFileContent = () => {
+    if (commit && currentFile) {
+      console.log("currentFile.raw_url", currentFile.raw_url)
+      axios.get(currentFile.raw_url)
+        .then((response) => {
+          setFileContent(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching file content:", error);
+        });
+    }
+  }
+
   useEffect(() => {
-    console.log("hello");
+    console.log("update SHA");
     getCommitInfo();
   }, [SHA]);
+
+  useEffect(() => {
+    console.log("update currentFile");
+    getFileContent();
+  }, [currentFile]);
 
   return (
     <>
@@ -58,17 +79,28 @@ const CommitHistoryContent = ({
           <div className="max-w-[70svw]">
             <div className="flex space-x-4 mb-[3rem] overflow-x-auto scrollbar-thin max-w-[70svw]">
               {commit.files.map((file) => (
-                <CommitHistoryFileChange
-                  key={file.sha}
-                  title={file.filename}
-                  subtitle={`+${file.additions} -${file.deletions}`}
-                  body={file.raw_url}
-                />
+                <button key={file.sha} onClick={() => {
+                  console.log("commit history file changed")
+                  setCurrentFile(file)
+                }} className="w-full">
+                  <CommitHistoryFileChange
+                    key={file.sha}
+                    title={file.filename}
+                    subtitle={`+${file.additions} -${file.deletions}`}
+                    body={file.raw_url}
+                  />
+                </button>
               ))}
             </div>
           </div>
-          <div className="mb-4">
-            <p>Code change square</p>
+          <div className="mb-10 mt-10 flex justify-center items-center">
+            {fileContent ? (
+              <div className="border border-gray-300 rounded-lg p-4 bg-white">
+                <pre className="whitespace-pre-wrap">{fileContent}</pre>
+              </div>
+            ) : (
+              <p>No file selected</p>
+            )}
           </div>
         </>
       ) : (
