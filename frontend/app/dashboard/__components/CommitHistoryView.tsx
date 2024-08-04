@@ -29,7 +29,7 @@ const CommitHistoryView: React.FC<CommitHistoryViewProps> = ({
         {repo ? (
           <div>
             <AddTagBar repo={repo} />
-            {/* <CommitHistoryContent SHA={commitSHA} repo={repo} owner={name} /> */}
+            <CommitHistoryContent SHA={commitSHA} repo={repo} owner={name} />
           </div>
         ) : (
           <CommitHistoryContent SHA={commitSHA} repo={repo} owner={name} />
