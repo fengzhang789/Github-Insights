@@ -223,7 +223,7 @@ export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, v
       The possible tags: documentation, new feature, bug fix, refactor, optimization${possibleTagsString}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
       Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
         const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
-            const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
+            const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
             return Object.assign(Object.assign({}, file), { analysis: {
                     create: {
                         analysis: fileAnalysis,
