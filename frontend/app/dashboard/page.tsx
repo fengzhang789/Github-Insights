@@ -20,6 +20,8 @@ export default function Dashboard() {
   const repos = useSelector((state: RootState) => state.repo.RepoList);
   const [selectedRepository, setSelectedRepository] = useState(null);
   const [commitHistory, setCommitHistory] = useState(null);
+  const [repoName, setRepoName] = useState(null);
+  const [name, setName] = useState(null);
   const [cookies] = useCookies(["accessJwt"]);
 
   const handleClick = () => {
@@ -32,6 +34,8 @@ export default function Dashboard() {
   const handleSelectChange = (event: any) => {
     const selectedRepo = repos.find((repo) => repo.name === event.target.value);
     setSelectedRepository(selectedRepo);
+    setRepoName(selectedRepo["name"])
+    setName(selectedRepo["owner"]["login"])
   };
 
   useEffect(() => {
@@ -103,7 +107,11 @@ export default function Dashboard() {
         </div>
       )}
       {currentView == "project" && (
-        <CommitHistoryView commitHistory={commitHistory} />
+        <CommitHistoryView
+          commitHistory={commitHistory}
+          name={name}
+          repo={repoName}
+        />
       )}
       {currentView == "feature" && "feature"}
       {currentView == "user" && "user"}
