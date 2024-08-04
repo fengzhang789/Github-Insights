@@ -93,16 +93,13 @@ const CommitHistoryContent = ({
       {commitSummary && !isLoading ? (
         <>
           <div className="flex justify-between items-center mb-4 max-w-[70svw]">
-<<<<<<< Updated upstream
-            <h1 className="text-4xl font-bold">Commit Summary: {commitSummary.recommendedCommitMessage}</h1>
+            <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
           </div>
           <div className="flex space-x-2 mb-4">
-=======
             <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
             <p className="text-gray-600">Branch: Main</p>
           </div>
           <div className="flex space-x-2 mb-[1rem]">
->>>>>>> Stashed changes
             {commitSummary.tags.split('///').map((tag, index) => (
               <Tag text={tag} key={index}/>
             ))}
