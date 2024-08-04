@@ -194,7 +194,7 @@ export const handleGetRepositoryCommit = async (req: Request<{ owner: string, re
   }
 }
 
-export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string, tags: string }>, res: Response) => {
+export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string, tags?: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
@@ -238,7 +238,7 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
   
     const tags = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Which out of the following tags are the most appropriate tags for this commit? 
       The possible tags: documentation, new feature, bug fix, refactor, optimization, ${req.body.tags}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
-      Tags will help users filter through commits and easily understand the commit. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
+      Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
 
     const fileAnalysisPromises = response.data.files.map(async (file: any) => {
       const fileAnalysis = await llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);

@@ -46,6 +46,7 @@ export type ShaCommitSummary = {
   deletions: number;
   entireCommitAnalysis: string;
   recommendedCommitMessage: string;
+  tags: string;
   files: FileSummary[];
 };
 
