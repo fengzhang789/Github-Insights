@@ -130,12 +130,12 @@ export const handleGetRepositoryCommits = (req, res) => __awaiter(void 0, void 0
         const octokit = new Octokit({
             auth: req.body.accessJwt
         });
-        const initialResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${(_a = req.body.sha) !== null && _a !== void 0 ? _a : ""}`, {
+        const initialResponse = yield octokit.paginate(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${(_a = req.body.sha) !== null && _a !== void 0 ? _a : ""}`, {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.status(200).send(initialResponse.data);
+        res.status(200).send(initialResponse);
     }
     catch (error) {
         console.log(error);

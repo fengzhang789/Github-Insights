@@ -6,11 +6,18 @@ import { CommitHistoryScrollbarProps } from "@/app/__typings/localtypes";
 export default function CommitHistoryScrollBar({
   commitHistory,
   setCommitSHA,
+  selectedUser
 }: CommitHistoryScrollbarProps) {
+
+  const filteredCommits = selectedUser
+    ? commitHistory?.filter(commit => commit.name === selectedUser)
+    : commitHistory;
+
+
   return (
     <ScrollContainer>
-      {commitHistory && commitHistory.length > 0 ? (
-        commitHistory.map((commit, index) => (
+      {filteredCommits && filteredCommits.length > 0 ? (
+        filteredCommits.map((commit, index) => (
           <CardWrapper key={index}>
             <ScrollbarCard commit={commit} setCommitSHA={setCommitSHA} />
           </CardWrapper>

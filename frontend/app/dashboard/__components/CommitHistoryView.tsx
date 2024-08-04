@@ -8,6 +8,7 @@ const CommitHistoryView: React.FC<CommitHistoryViewProps> = ({
   commitHistory,
   repo,
   name,
+  selectedUser
 }) => {
   const [commitSHA, setCommitSHA] = useState<string | null>(null);
 
@@ -21,6 +22,7 @@ const CommitHistoryView: React.FC<CommitHistoryViewProps> = ({
         <CommitHistoryScrollbar
           commitHistory={commitHistory}
           setCommitSHA={setCommitSHA}
+          selectedUser={selectedUser}
         />
       </div>
       <div className="flex-1 basis-3/4 px-10 py-6 max-w-[70svw]">

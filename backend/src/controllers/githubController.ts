@@ -134,19 +134,19 @@ export const handleLoginGithub = async (req: Request<{ code: string }>, res: Res
   }
 }
 
-export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string, sha?: string }>, res: Response<TCommitInfo>) => {
+export const handleGetRepositoryCommits = async (req: Request<{ owner: string, repo: string, accessJwt: string, sha?: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
     })
 
-    const initialResponse = await octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${req.body.sha ?? ""}`, {
+    const initialResponse = await octokit.paginate(`GET /repos/${req.body.owner}/${req.body.repo}/commits?sha=${req.body.sha ?? ""}`, {
       headers: {
         'X-GitHub-Api-Version': '2022-11-28'
       }
     })
 
-    res.status(200).send(initialResponse.data)
+    res.status(200).send(initialResponse)
   } catch (error: any) {
     console.log(error)
     res.status(500).send(error.message)

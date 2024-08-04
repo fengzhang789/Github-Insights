@@ -10,43 +10,42 @@ export const GradientSection: React.FC = () => {
 
     gradientRef.current = new NeatGradient({
       ref: canvasRef.current,
-      "colors": [
+      colors: [
         {
-            "color": "#4D1698",
-            "enabled": false
+          color: "#1E3A8A", // Dark Blue
+          enabled: true,
         },
         {
-            "color": "#573994",
-            "enabled": true
+          color: "#50E3C2", // Aqua
+          enabled: false,
         },
         {
-            "color": "#797979",
-            "enabled": false
+          color: "#9013FE", // Purple
+          enabled: true,
         },
         {
-            "color": "#482462",
-            "enabled": true
+          color: "#BD10E0", // Light Purple
+          enabled: true,
         },
         {
-            "color": "#f5e1e5",
-            "enabled": false
-        }
-    ],
-    "speed": 4,
-    "horizontalPressure": 4,
-    "verticalPressure": 5,
-    "waveFrequencyX": 2,
-    "waveFrequencyY": 3,
-    "waveAmplitude": 5,
-    "shadows": 0,
-    "highlights": 2,
-    "colorBrightness": 1,
-    "colorSaturation": 7,
-    "wireframe": false,
-    "colorBlending": 6,
-    "backgroundColor": "#003FFF",
-    "backgroundAlpha": 1,
-    "resolution": 1
+          color: "#7B61FF", // Medium Purple
+          enabled: true,
+        },
+      ],
+      speed: 2,
+      horizontalPressure: 4,
+      verticalPressure: 5,
+      waveFrequencyX: 2,
+      waveFrequencyY: 3,
+      waveAmplitude: 5,
+      shadows: 0,
+      highlights: 1,
+      colorSaturation: 0,
+      colorBrightness: 1,
+      wireframe: true,
+      colorBlending: 6,
+      backgroundAlpha: 0,
+      resolution: 1 / 2,
     });
 
     return gradientRef.current.destroy;
