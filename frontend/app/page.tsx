@@ -48,7 +48,7 @@ export default function Home() {
           </span>
         </BoldHeader>
         <Link href="/login">
-          <StyledButton>Get Started with GitInsights &gt;</StyledButton>
+          <StyledButton>Get Started with GitInsights</StyledButton>
         </Link>
       </ContentContainer>
       <StyledImage src={CodeDemo} alt="Example" />
@@ -97,7 +97,7 @@ export default function Home() {
       </FeaturesSection>
 
       <HowItWorksSection>
-        <h2>How GitInsights Works</h2>
+        <h2>How GitInsights <GradientHeader> Works. </GradientHeader> </h2>
         <StepGrid>
           <Step>
             <h3>1. Connect Your Repository</h3>
@@ -119,7 +119,7 @@ export default function Home() {
       </HowItWorksSection>
 
       <TestimonialsSection>
-        <h2>What Our Users Say</h2>
+        <h2>What Our Users Are Saying</h2>
         <TestimonialGrid>
           <Testimonial>
             <Quote>
@@ -223,32 +223,38 @@ const GradientHeader = styled.h1`
 `;
 
 const StyledButton = styled(Button)`
-  margin-top: 40px; // Adjust the margin value as needed
-  padding: 15px 30px; // Balanced padding for a larger button
-  font-size: 1.5rem; // Increase font size
-  width: auto; // Adjust width if needed
-  height: auto; // Adjust height if needed
-  border-radius: 8px; // Rounded corners
-  background-color: #4b0082; // Background color
-
-  color: white; // Text color
-  border: none; // Remove default border
-  cursor: pointer; // Pointer cursor on hover
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle box shadow
-  transition:
-    background-color 0.3s,
-    transform 0.2s; // Smooth transitions
-
+  margin-top: 40px;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  
+  background: rgba(255, 255, 255, 0.1); // Glassy background
+  backdrop-filter: blur(10px); // Blur effect for glassy look
+  
+  color: transparent; // Transparent text color for gradient
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(to right, blue, purple, pink); // Gradient for text
+  
+  border: 2px solid transparent; // Transparent border for gradient
+  border-image: linear-gradient(to right, blue, purple, pink) 1;
+  
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
   &:hover {
-    background-color: #6a0dad; // Darker background on hover
-    transform: translateY(-2px); // Slight lift on hover
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-
+  
   &:active {
-    background-color: #3b0072; // Darker background on click
-    transform: translateY(1px); // Slight push on click
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
+
 
 const NavBarButton = styled(Button)`
   padding: 15px 20px; // Increase padding for a larger button
@@ -275,16 +281,47 @@ const LeftAlignedContainer = styled.div`
 `;
 
 const StyledBox = styled.div`
+  position: relative;
   width: 60%;
-  margin: 20px 0; // Remove auto centering and add vertical margin
+  margin: 20px 0;
   padding: 20px;
   border-radius: 8px;
-  background: linear-gradient(
-    to right,
-    #4b0082,
-    #8a2be2
-  ); // Dark purple gradient
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid white;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(100, 100, 255, 0.3) 0%,
+      rgba(200, 100, 255, 0.2) 30%,
+      rgba(255, 100, 200, 0.1) 60%,
+      transparent 70%
+    );
+    opacity: 0.7;
+    z-index: -1;
+    animation: pulse 8s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
 `;
+
 
 const CatchyText = styled.p`
   font-size: 2rem; // Bigger font size
@@ -301,6 +338,7 @@ const FeaturesSection = styled.section`
   h2 {
     font-size: 3rem;
     font-weight: 600;
+    text-align: center;
   }
 `;
 
@@ -319,19 +357,48 @@ const FeatureCard = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 30px;
-  border-radius: 8px;
-  z-index: 0;
+  border-radius: 16px;
+  z-index: 1;
   min-height: 16rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid transparent;
-  border-image: linear-gradient(45deg, #3498db, #8e44ad, #ff69b4);
-  border-image-slice: 1;
+  border: 1px solid white;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(100, 100, 255, 0.3) 0%,
+      rgba(200, 100, 255, 0.2) 30%,
+      rgba(255, 100, 200, 0.1) 60%,
+      transparent 70%
+    );
+    opacity: 0.7;
+    z-index: -1;
+    animation: pulse 8s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  & > * {
+    position: relative;
+    z-index: 1;
   }
 
   h3 {
@@ -383,6 +450,10 @@ const Step = styled.div`
   border-radius: 10px;
   background: linear-gradient(to top, #000000, #242424);
   
+  border: 1px solid transparent;
+  border-image: linear-gradient(45deg, blue, violet, #ff69b4);
+  border-image-slice: 1;
+
   backdrop-filter: blur(5px);
   transition: transform 0.3s ease;
 
@@ -409,6 +480,7 @@ const TestimonialsSection = styled.section`
   h2 {
     font-size: 3rem;
     font-weight: 600;
+    text-align: center;
   }
 `;
 
@@ -439,39 +511,7 @@ const Author = styled.p`
   color: #666;
 `;
 
-// Pricing Section
-const PricingSection = styled.section`
-  padding: 80px 60px;
-  background-color: #ffffff;
-`;
 
-const PricingGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-`;
-
-const PricingCard = styled.div`
-  background-color: #f8f9fa;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-
-  h3 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: #333;
-  }
-`;
-
-const Price = styled.p`
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #4b0082;
-`;
 
 const FeatureList = styled.ul`
   list-style-type: none;

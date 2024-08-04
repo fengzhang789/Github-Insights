@@ -12,38 +12,38 @@ export const GradientSection: React.FC = () => {
       ref: canvasRef.current,
       "colors": [
         {
-            "color": "#4D1698",
-            "enabled": false
-        },
-        {
-            "color": "#573994",
+            "color": "#000000",
             "enabled": true
         },
         {
-            "color": "#797979",
-            "enabled": false
-        },
-        {
-            "color": "#482462",
+            "color": "#633987",
             "enabled": true
         },
         {
-            "color": "#f5e1e5",
+            "color": "#000000",
+            "enabled": true
+        },
+        {
+            "color": "#632A8E",
+            "enabled": true
+        },
+        {
+            "color": "#a2d2ff",
             "enabled": false
         }
     ],
     "speed": 4,
-    "horizontalPressure": 4,
-    "verticalPressure": 5,
+    "horizontalPressure": 3,
+    "verticalPressure": 3,
     "waveFrequencyX": 2,
-    "waveFrequencyY": 3,
+    "waveFrequencyY": 4,
     "waveAmplitude": 5,
     "shadows": 0,
     "highlights": 2,
     "colorBrightness": 1,
-    "colorSaturation": 7,
+    "colorSaturation": 3,
     "wireframe": false,
-    "colorBlending": 6,
+    "colorBlending": 5,
     "backgroundColor": "#003FFF",
     "backgroundAlpha": 1,
     "resolution": 1
