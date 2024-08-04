@@ -92,21 +92,21 @@ const CommitHistoryContent = ({
     getFileContent();
   }, [currentFile]);
 
+  const isCommitSummaryIncludesSlash = commitSummary?.tags.includes('///');
+
   return (
     <>
       {commitSummary && !isLoading ? (
         <>
-          <div className="flex justify-between items-center mb-4 max-w-[70svw]">
-            <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
-          </div>
           <div className="flex space-x-2 mb-4">
             <h1 className="text-4xl font-bold"> {commitSummary.recommendedCommitMessage}</h1>
             <p className="text-gray-600">Branch: Main</p>
           </div>
           <div className="flex space-x-2 mb-[1rem]">
-            {commitSummary.tags.split('///').map((tag, index) => (
+            {isCommitSummaryIncludesSlash && commitSummary.tags.split('///').map((tag, index) => (
               <Tag text={tag} key={index}/>
             ))}
+            {!isCommitSummaryIncludesSlash && <Tag text={"refactor"} />}
           </div>
           <div className="text-lg mb-[2rem]">
             <p>
