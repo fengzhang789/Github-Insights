@@ -11,22 +11,29 @@ import { Octokit } from "octokit";
 import generateJWT from "../utils/generateJWT.js";
 import axios from "axios";
 import queryString from "query-string";
+import { PrismaClient } from "@prisma/client";
+import { llamaGenerate } from "../utils/ollamaPrompt.js";
+const prisma = new PrismaClient();
 export const handleGetAppInformationRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const octokit = new Octokit({
-        auth: generateJWT()
-    });
-    const installationInfo = yield octokit.request('GET /users/fengzhang789/installation', {
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-        }
-    });
-    installationInfo.data.INSTALLATION_ID;
-    const response = yield octokit.request('GET /app', {
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-        }
-    });
-    res.send(response.data);
+    try {
+        const octokit = new Octokit({
+            auth: generateJWT()
+        });
+        const installationInfo = yield octokit.request('GET /users/fengzhang789/installation', {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        const response = yield octokit.request('GET /app', {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        res.status(200).send(response.data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 export const handleGetAppInstallations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -38,33 +45,43 @@ export const handleGetAppInstallations = (req, res) => __awaiter(void 0, void 0,
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.send(response.data);
+        res.status(200).send(response.data);
     }
     catch (error) {
-        res.send(error.message);
+        res.status(500).send(error.message);
     }
 });
 export const handleGetAppUserInstallations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const octokit = new Octokit({
-        auth: generateJWT()
-    });
-    const response = yield octokit.request(`GET /users/${req.body.username}/installation`, {
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-        }
-    });
-    res.send(response.data);
+    try {
+        const octokit = new Octokit({
+            auth: generateJWT()
+        });
+        const response = yield octokit.request('GET /user/installations', {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        res.status(200).send(response.data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 export const handleGetAppUserRepositories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const octokit = new Octokit({
-        auth: generateJWT()
-    });
-    const response = yield octokit.request(`GET /users/${req.body.username}/repos`, {
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-        }
-    });
-    res.send(response.data);
+    try {
+        const octokit = new Octokit({
+            auth: generateJWT()
+        });
+        const response = yield octokit.request(`GET /users/${req.body.username}/repos`, {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        res.status(200).send(response.data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 export const handleGetAppRepositoryInformation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -76,10 +93,10 @@ export const handleGetAppRepositoryInformation = (req, res) => __awaiter(void 0,
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.send(response.data);
+        res.status(200).send(response.data);
     }
     catch (error) {
-        res.send(error.message);
+        res.status(500).send(error.message);
     }
 });
 export const handleGetUserRepositories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -93,11 +110,11 @@ export const handleGetUserRepositories = (req, res) => __awaiter(void 0, void 0,
             }
         });
         console.log(response.data);
-        res.send(response.data);
+        res.status(200).send(response.data);
     }
     catch (error) {
         console.log(error.message);
-        res.send(error.message);
+        res.status(500).send(error.message);
     }
 });
 export const handleLoginGithub = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -117,15 +134,16 @@ export const handleGetRepositoryCommits = (req, res) => __awaiter(void 0, void 0
         const octokit = new Octokit({
             auth: req.body.accessJwt
         });
-        const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
+        const initialResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits`, {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.send(response.data);
+        res.status(200).send(initialResponse.data);
     }
     catch (error) {
-        res.send(error.message);
+        console.log(error);
+        res.status(500).send(error.message);
     }
 });
 export const handleGetRepositoryCommit = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -138,10 +156,83 @@ export const handleGetRepositoryCommit = (req, res) => __awaiter(void 0, void 0,
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         });
-        res.send(response.data);
+        res.status(200).send(response.data);
     }
     catch (error) {
-        res.send(error.message);
+        res.status(500).send(error.message);
+    }
+});
+export const handleGetCommitAnalysis = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const octokit = new Octokit({
+            auth: req.body.accessJwt
+        });
+        // try {
+        //   const commitAnalysis = await prisma.commit.findFirstOrThrow({
+        //     where: {
+        //       sha: req.params.ref
+        //     },
+        //     include: {
+        //       files: {
+        //         include: {
+        //           analysis: true
+        //         }
+        //       }
+        //     }
+        //   });
+        //   return res.status(200).send(commitAnalysis);
+        // } catch {
+        //   console.log("No commit found, creating a new one");
+        // }
+        // Fetch commit details from GitHub
+        const response = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        // Fetch diff details from GitHub
+        const diffResponse = yield octokit.request(`GET /repos/${req.body.owner}/${req.body.repo}/commits/${req.params.ref}`, {
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+                'accept': 'application/vnd.github.diff'
+            }
+        });
+        const fileAnalysisPromises = response.data.files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
+            const fileAnalysis = yield llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with backslash n, just one long string. \n${diffResponse.data}`);
+            return Object.assign(Object.assign({}, file), { analysis: {
+                    create: {
+                        analysis: fileAnalysis.response,
+                    }
+                } });
+        }));
+        // Wait for all file analyses to complete
+        const fileData = yield Promise.all(fileAnalysisPromises);
+        // Create commit with analyzed files
+        const commit = yield prisma.commit.create({
+            data: {
+                sha: response.data.sha,
+                message: response.data.commit.message,
+                date: response.data.commit.committer.date,
+                total: response.data.stats.total,
+                additions: response.data.stats.additions,
+                deletions: response.data.stats.deletions,
+                files: {
+                    create: fileData
+                }
+            },
+            include: {
+                files: {
+                    include: {
+                        analysis: true
+                    }
+                }
+            }
+        });
+        res.status(200).send(commit);
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send(error.message);
     }
 });
 export const handleGetRepositoryCommitDiff = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -155,9 +246,9 @@ export const handleGetRepositoryCommitDiff = (req, res) => __awaiter(void 0, voi
                 'accept': 'application/vnd.github.diff'
             }
         });
-        res.send(response.data);
+        res.status(200).send(response.data);
     }
     catch (error) {
-        res.send(error.message);
+        res.status(500).send(error.message);
     }
 });
