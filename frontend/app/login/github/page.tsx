@@ -30,40 +30,15 @@ const PageContent = (props: Props) => {
   useEffect(() => {
     if (code) {
       login({ code });
-    } else {
-    }
+    } 
   }, [code, login]); // Only run effect if `code` or `login` changes
 
   useEffect(() => {
     if (!result.isUninitialized) {
       if (result.isSuccess && result.data.access_token) {
-        setCookie("accessJwt", result.data.access_token, {path: "/"});
-
-        //const {repos, isSuccess} = useGetUserRepositoriesQuery(result.data.access_token);
-
-        console.log("cookies set", result.data.access_token);
-        
-        // get user repositories
-        axios.post("http://localhost:5000/github/user/repositories", {
-            accessJwt: result.data.access_token,
-          })
-          .then((response) => {
-            setRepositories(response.data);
-            console.log("user repositories set: ", repositories);
-            dispatch(setRepoList(response.data));
-          })
-          .catch((error) => {
-            console.error("Error fetching repositories:", error);
-          })
-          .finally(() => {
-            setIsLoading(false);
-            router.push("/dashboard");
-          });
-      } else {
-        console.log("not result.isSuccess && result.data.access_token");
-        console.log("result.isSuccess: ", result.isSuccess);
-        console.log("result.data: ", result.data?.access_token);
-      }
+        setCookie("accessJwt", result.data.access_token, {path: "/", maxAge: 24 * 60 * 60 * 1000});
+        router.push("/dashboard");  
+      } 
     }
   }, [result, setCookie]); // Only run effect if `result` or `setCookie` changes
 

@@ -85,7 +85,7 @@ export interface TUserRepository {
   watchers: number
   default_branch: string
   permissions: Permissions
-}[]
+}
 
 export interface Owner {
   login: string

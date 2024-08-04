@@ -12,17 +12,17 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { TUserRepository } from "../__typings/api";
 import { current } from "@reduxjs/toolkit";
+import { useGetUserRepositoriesQuery } from "../__store/api";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
-
   const currentView = useSelector((state: RootState) => state.view.currentView);
-  const repos = useSelector((state: RootState) => state.repo.RepoList);
-  const [selectedRepository, setSelectedRepository] = useState(null);
+  const [selectedRepository, setSelectedRepository] = useState<TUserRepository | null>(null);
   const [commitHistory, setCommitHistory] = useState(null);
-  const [repoName, setRepoName] = useState(null);
-  const [name, setName] = useState(null);
+  const [repoName, setRepoName] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
   const [cookies] = useCookies(["accessJwt"]);
+  const {data: repos, isSuccess} = useGetUserRepositoriesQuery({accessJwt: cookies.accessJwt})
 
   const handleClick = () => {
     console.log(selectedRepository);
@@ -32,18 +32,28 @@ export default function Dashboard() {
   };
 
   const handleSelectChange = (event: any) => {
-    const selectedRepo = repos.find((repo) => repo.name === event.target.value);
-    setSelectedRepository(selectedRepo);
-    setRepoName(selectedRepo["name"])
-    setName(selectedRepo["owner"]["login"])
+    const selectedRepo = repos?.find((repo) => repo.name === event.target.value);
+
+    if (selectedRepo) {
+      setSelectedRepository(selectedRepo);
+      setRepoName(selectedRepo["name"])
+      setName(selectedRepo["owner"]["login"])
+    }
   };
 
-  useEffect(() => {
-    console.log(repos);
-  }, []);
-  const handleSelect = (e: any) => {
-    setSelectedRepo(e.target.value);
-  };
+  const getUserRepos = () => {
+    axios.post("http://localhost:5000/github/user/repositories", {
+      accessJwt: cookies.accessJwt,
+    })
+      .then((response) => {
+        dispatch(setRepoList(response.data));
+        console.log("fetched repo list")
+      })
+      .catch((error) => {
+        console.error("Error fetching repositories:", error);
+      })
+  }
+
 
   const getRepoInfo = () => {
     console.log("abc123");
@@ -74,6 +84,10 @@ export default function Dashboard() {
         });
     }
   };
+
+  if (repos == null) {
+    return null;
+  }
 
   return (
     <div className="max-w-[100svw]">
