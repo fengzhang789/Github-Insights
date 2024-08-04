@@ -194,7 +194,7 @@ export const handleGetRepositoryCommit = async (req: Request<{ owner: string, re
   }
 }
 
-export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string }>, res: Response) => {
+export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo: string, accessJwt: string, ref: string, tags?: string }>, res: Response) => {
   try {
     const octokit = new Octokit({
       auth: req.body.accessJwt
@@ -235,6 +235,10 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
     // const giveContext = await 
     const commitAnalysis = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and provide a brief summary of what happened.`);
     const recommendedCommitMessage = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Analyze the commit and write a short commit message, make it brief. Remember, this is supposed to be a commit message. Just send the commit message, dont prefix with anything or write commit message:`); 
+  
+    const tags = await llamaGenerate(`This is the diff log for a commit. ${diffResponse.data}\n\n Which out of the following tags are the most appropriate tags for this commit? 
+      The possible tags: documentation, new feature, bug fix, refactor, optimization, ${req.body.tags}. Choose up to the 3 most fitting tags, DO NOT add any that are uncertain or unnecessary. 
+      Tags will help users filter through commit. They can be about the nature of the commit or what part/area the code changed. Write in this format: "tag1///tag2///tag3". For example, if the best suited tags are only "new feature" and "documentation", output "new feature///documentation"`);
 
     const fileAnalysisPromises = response.data.files.map(async (file: any) => {
       const fileAnalysis = await llamaGenerate(`This is the diff log for a commit. Intelligently analyze what happened in the file "${file.filename}" only, no long outputs and get to the point. Don't format the text with any special characters or formatters, just one long string. \n${diffResponse.data}`);
@@ -258,6 +262,7 @@ export const handleGetCommitAnalysis = async (req: Request<{ owner: string, repo
         sha: response.data.sha,
         entireCommitAnalysis: commitAnalysis.response,
         recommendedCommitMessage: recommendedCommitMessage.response,
+        tags: tags.response,
         message: response.data.commit.message,
         date: response.data.commit.committer.date,
         total: response.data.stats.total,

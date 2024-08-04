@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import CommitHistoryFileChange from "./CommitHistoryFileChange";
+import Tag from './Tag';
 import axios from "axios";
 import {
   CommitHistoryContentProps,
@@ -86,8 +87,13 @@ const CommitHistoryContent = ({
       {commitSummary ? (
         <>
           <div className="flex justify-between items-center mb-4 max-w-[70svw]">
-            <h1 className="text-4xl font-bold">Commit Summary</h1>
+            <h1 className="text-4xl font-bold">Commit Summary: {commitSummary.recommendedCommitMessage}</h1>
             <p className="text-gray-600">Branch: Main</p>
+          </div>
+          <div className="flex space-x-2">
+            {commitSummary.tags.split('///').map((tag) => (
+              <Tag text={tag}/>
+            ))}
           </div>
           <div className="text-lg mb-[3rem]">
             <p>
