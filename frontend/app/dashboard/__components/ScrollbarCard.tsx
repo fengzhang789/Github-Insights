@@ -14,23 +14,32 @@ export default function ScrollbarCard({
   commit,
   setCommitSHA,
 }: ScrollbarCardProps) {
+
   return (
-    <Button onClick={() => setCommitSHA(commit.sha)}>
-      <Card>
+    <StyledButton onClick={() => setCommitSHA(commit.sha)}>
+      <Card className="max-w-[30svw] text-wrap break-words">
         <CardHeader>
-          <Avatar src={commit.avatar} alt={`${commit.name}'s avatar`} />
-          <CardTitle>{commit.sha}</CardTitle>
-          <CardDescription>{commit.name}</CardDescription>
-          <CardDescription>{commit.email}</CardDescription>
+
+          <CardTitle className="text-lg font-semibold truncate-multiline">
+            Commit Message: {commit.message}
+          </CardTitle>
+
+          <div className="flex items-center mb-2">
+
+            <Avatar src={commit.avatar} alt={`${commit.name}'s avatar`} />
+            <span className="w-[80%] text-wrap break-words">
+              <CardDescription className="text-sm text-gray-600">{commit.name}</CardDescription>
+              <CardDescription className="text-sm text-wrap break-words text-gray-500">{commit.email}</CardDescription>
+            </span>
+          </div>
         </CardHeader>
-        <CardContent>
-          <p>Commit Message: {commit.message}</p>
-        </CardContent>
-        <CardFooter>
-          <p>Date Created: {commit.date}</p>{" "}
+        
+        <CardFooter className="text-sm text-gray-500">
+          Date: {commit.date} <br/>
+          SHA: {commit.sha}
         </CardFooter>
       </Card>
-    </Button>
+    </StyledButton>
   );
 }
 
@@ -41,7 +50,7 @@ const Avatar = styled.img`
   margin-right: 10px;
 `;
 
-const Button = styled.button`
+const StyledButton = styled.button`
   background: none;
   border: none;
   padding: 0;

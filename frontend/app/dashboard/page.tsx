@@ -76,7 +76,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div>
+    <div className="max-w-[100svw]">
       <TopBar />
       {currentView == null && (
         <div className="h-[80svh] grid place-items-center">
@@ -87,7 +87,7 @@ export default function Dashboard() {
             <div className="flex justify-center space-x-2 mt-4">
               <select
                 onChange={handleSelectChange}
-                className="w-[280px] text-black p-[9px] rounded-lg"
+                className="w-[280px] text-black p-[9px] rounded-lg bg-white"
               >
                 <option value="">Select a Project</option>
                 {repos.map((repo, index) => (

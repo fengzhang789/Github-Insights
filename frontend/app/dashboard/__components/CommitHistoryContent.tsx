@@ -42,21 +42,21 @@ const CommitHistoryContent = ({
     <>
       {commit ? (
         <>
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-bold">Commit Summary</h1>
+          <div className="flex justify-between items-center mb-4 max-w-[70svw]">
+            <h1 className="text-4xl font-bold">Commit Summary</h1>
             <p className="text-gray-600">Branch: Main</p>
           </div>
-          <div className="mb-4">
+          <div className="text-lg mb-[3rem]">
             <p>
               Summary~~~~~
               asjdfl;sajdfksajdf;asjdfl;kjasld;fja;lskdjf;laskdjfl;kasjdf;alsjkdf;askdjf;lasjdf;sdf
             </p>
           </div>
           <div className="mb-4">
-            <h1 className="text-xl font-bold">Files Changed</h1>
+            <h1 className="text-3xl font-bold"> Files Changed </h1>
           </div>
-          <div className="container max-w-3/4">
-            <div className="flex space-x-2 mb-4 overflow-x-auto max-w-full">
+          <div className="max-w-[70svw]">
+            <div className="flex space-x-4 mb-[3rem] overflow-x-auto scrollbar-thin max-w-[70svw]">
               {commit.files.map((file) => (
                 <CommitHistoryFileChange
                   key={file.sha}
